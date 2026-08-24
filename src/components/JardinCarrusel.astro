@@ -1,0 +1,291 @@
+---
+// src/components/JardinCarrusel.astro
+import { getCollection } from 'astro:content';
+
+const proyectos = await getCollection('proyectos');
+proyectos.sort((a, b) => a.data.orden - b.data.orden);
+
+const proyectosData = proyectos.map((p) => ({
+  id: p.id,
+  titulo: p.data.titulo,
+  subtituloBreve: p.data.subtituloBreve,
+  categoria: p.data.categoria,
+  ilustracion: p.data.ilustracion || '',
+  animacionLottie: p.data.animacionLottie || ''
+}));
+---
+
+<div id="carrusel-container" class="relative w-full max-w-5xl mx-auto py-8 md:py-16 px-4 select-none touch-pan-y">
+  
+  <!-- LÍNEA DE TIERRA ASCII (Detrás de los elementos) -->
+  <div 
+    id="ascii-ground-container" 
+    class="absolute w-[95%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0 pointer-events-none"
+  ></div>
+
+  <!-- Contenedor Principal: 1 Columna en móvil, 3 en Desktop -->
+  <div class="relative z-10 grid grid-cols-1 md:grid-cols-3 items-center gap-6 min-h-[400px] md:min-h-[450px]">
+    
+    <!-- Slot 0: Planta Izquierda (Oculta en Móvil) -->
+    <div id="slot-0" class="hidden md:flex justify-center items-center relative z-10 -translate-y-6 transition-transform duration-500 origin-bottom">
+      <!-- Inyectado por JS -->
+    </div>
+
+    <!-- Slot 1: Planta Central + Tarjeta Transparente -->
+    <div class="relative flex justify-center items-center z-30 translate-y-0 md:translate-y-5">
+      <!-- Tarjeta Central (100% Transparente) -->
+      <div id="slot-1" class="w-full flex justify-center items-center transition-transform duration-500 origin-bottom">
+        <!-- Inyectado por JS -->
+      </div>
+    </div>
+
+    <!-- Slot 2: Planta Derecha (Oculta en Móvil) -->
+    <div id="slot-2" class="hidden md:flex justify-center items-center relative z-10 -translate-y-5 transition-transform duration-500 origin-bottom">
+      <!-- Inyectado por JS -->
+    </div>
+
+  </div>
+
+  <!-- Puntos Indicadores (Dots) -->
+  <div id="carrusel-dots" class="flex items-center justify-center gap-1.5 mt-6 z-20 relative">
+    <!-- Inyectado por JS -->
+  </div>
+</div>
+
+<!-- Estilos para la línea ASCII -->
+<style>
+  :global(.ascii-ground) {
+    font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+    color: #b1b2b6;
+    white-space: pre;
+    overflow: hidden;
+    text-align: center;
+    width: 100%;
+    display: block;
+    user-select: none;
+    line-height: 1;
+    font-size: 1.1rem;
+    letter-spacing: -0.05em;
+  }
+</style>
+
+<!-- Script del Carrusel, Gestos y Autoplay -->
+<script is:inline define:vars={{ proyectosData }}>
+  let currentIndex = 0;
+  const total = proyectosData.length;
+  let autoplayTimer = null;
+
+  const carruselContainer = document.getElementById('carrusel-container');
+  const slot0 = document.getElementById('slot-0');
+  const slot1 = document.getElementById('slot-1');
+  const slot2 = document.getElementById('slot-2');
+  const dotsContainer = document.getElementById('carrusel-dots');
+
+  function getProject(index) {
+    const normIndex = (index % total + total) % total;
+    return proyectosData[normIndex];
+  }
+
+  function renderDots() {
+    if (!dotsContainer) return;
+    const activeIndex = (currentIndex % total + total) % total;
+    
+    dotsContainer.innerHTML = proyectosData.map((_, i) => `
+      <button
+        data-dot="${i}"
+        aria-label="Ir al proyecto ${i + 1}"
+        class="h-2 rounded-full transition-all cursor-pointer ${
+          i === activeIndex
+            ? 'bg-[var(--color-accent)] w-6'
+            : 'bg-stone-300 hover:bg-stone-400 w-2'
+        }"
+      ></button>
+    `).join('');
+
+    dotsContainer.querySelectorAll('[data-dot]').forEach(dot => {
+      dot.addEventListener('click', () => {
+        currentIndex = parseInt(dot.getAttribute('data-dot'), 10);
+        renderCarousel();
+        resetAutoplay();
+      });
+    });
+  }
+
+  function renderCarousel() {
+    if (!total) return;
+
+    const leftProject = getProject(currentIndex - 1);
+    const centerProject = getProject(currentIndex);
+    const rightProject = getProject(currentIndex + 1);
+
+    // Slot 0 (Izquierda)
+    if (slot0) {
+      slot0.innerHTML = `
+        <a href="/proyectos/${leftProject.id}" class="group block cursor-pointer transition-transform duration-300 hover:scale-105">
+          <div class="w-40 h-40 flex items-center justify-center opacity-85">
+            ${leftProject.ilustracion 
+              ? `<img src="${leftProject.ilustracion}" alt="${leftProject.titulo}" class="w-full h-full object-contain pointer-events-none" />` 
+              : `<span class="text-4xl">🪴</span>`
+            }
+          </div>
+        </a>
+      `;
+    }
+
+    // Slot 1 (Centro)
+    if (slot1) {
+      slot1.innerHTML = `
+        <a href="/proyectos/${centerProject.id}" class="group relative block w-full max-w-xs bg-transparent border border-stone-300 rounded-md p-5 transition-all duration-300 hover:border-[var(--color-accent)] cursor-pointer">
+
+          <div class="relative h-6 overflow-hidden flex flex-wrap gap-1.5 justify-end z-10 mb-6" id="category-wrapper">
+            <div class="flex flex-wrap gap-1.5 justify-end" id="category-row">
+              ${centerProject.categoria.map(cat => `
+                <span class="inline-flex items-center justify-center text-[9px] font-semibold text-white bg-[var(--color-accent)] rounded-md px-3 py-1 uppercase tracking-wider leading-none">
+                  ${cat}
+                </span>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="w-40 h-40 mx-auto flex items-center justify-center">
+            ${centerProject.ilustracion 
+              ? `<img src="${centerProject.ilustracion}" alt="${centerProject.titulo}" class="w-full h-full object-contain pointer-events-none opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300" />` 
+              : `<span class="text-5xl grayscale opacity-80">🪴</span>`
+            }
+          </div>
+
+          <div class="pt-5 text-left mt-2">
+            <h3 class="font-medium text-base leading-tight text-stone-900 group-hover:text-[var(--color-accent)] transition-colors">
+              ${centerProject.titulo}
+            </h3>
+            <p class="text-[11px] text-stone-600 mt-2 leading-relaxed line-clamp-2">
+              ${centerProject.subtituloBreve}
+            </p>
+          </div>
+
+          <div class="mt-4 flex justify-center">
+            <span class="inline-flex items-center gap-1.5 text-[11px] font-medium text-[var(--color-accent)] border border-[var(--color-accent)] rounded-md px-4 py-1.5 group-hover:bg-[var(--color-accent)] group-hover:text-white transition-colors">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22c4.418 0 8-3.358 8-7.5 0-4.142-4-9.5-8-13.5-4 4-8 9.358-8 13.5C4 18.642 7.582 22 12 22Z"/>
+              </svg>
+              regar proyecto
+            </span>
+          </div>
+        </a>
+      `;
+    }
+
+    // Slot 2 (Derecha)
+    if (slot2) {
+      slot2.innerHTML = `
+        <a href="/proyectos/${rightProject.id}" class="group block cursor-pointer transition-transform duration-300 hover:scale-105">
+          <div class="w-40 h-40 flex items-center justify-center opacity-85">
+            ${rightProject.ilustracion 
+              ? `<img src="${rightProject.ilustracion}" alt="${rightProject.titulo}" class="w-full h-full object-contain pointer-events-none" />` 
+              : `<span class="text-4xl">🪴</span>`
+            }
+          </div>
+        </a>
+      `;
+    }
+
+    renderDots();
+  }
+
+  // --- DETECCIÓN DE GESTOS SWIPE EN MÓVIL ---
+  if (carruselContainer) {
+    let startX = 0;
+    let startY = 0;
+
+    carruselContainer.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    }, { passive: true });
+
+    carruselContainer.addEventListener('touchend', (e) => {
+      const endX = e.changedTouches[0].clientX;
+      const endY = e.changedTouches[0].clientY;
+      const diffX = startX - endX;
+      const diffY = startY - endY;
+
+      // Solo activa el cambio si el movimiento horizontal es mayor que el vertical
+      if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
+        if (diffX > 0) {
+          currentIndex++;
+        } else {
+          currentIndex--;
+        }
+        renderCarousel();
+        resetAutoplay();
+      }
+    }, { passive: true });
+  }
+
+  // --- TEMPORIZADOR AUTOMÁTICO (CAMBIA CADA 5 SEGUNDOS) ---
+  function startAutoplay() {
+    autoplayTimer = setInterval(() => {
+      currentIndex++;
+      renderCarousel();
+    }, 5000);
+  }
+
+  function resetAutoplay() {
+    clearInterval(autoplayTimer);
+    startAutoplay();
+  }
+
+  // --- GENERADOR DE SUELO ASCII ---
+  function createAsciiGround({
+    container,
+    length = 110,
+    speed = 150,
+    charSets = { dense: '_', sparse: '.', empty: ' ' }
+  } = {}) {
+    const targetEl = typeof container === 'string' ? document.querySelector(container) : container;
+    if (!targetEl) return () => {};
+
+    const asciiEl = document.createElement('div');
+    asciiEl.className = 'ascii-ground';
+    targetEl.appendChild(asciiEl);
+
+    let step = 0;
+
+    function generateFrame() {
+      let result = '';
+      step += 0.12;
+
+      for (let i = 0; i < length; i++) {
+        const progress = i / (length - 1);
+        const distanceToEdge = Math.abs(progress - 0.5) * 2;
+        const densityMask = Math.pow(1 - distanceToEdge, 1.4);
+
+        const wave = Math.sin(i * 0.1 - step);
+        const noise = (Math.random() - 0.5) * 1.1;
+        const signal = (wave + noise) * densityMask;
+
+        if (Math.random() < 0.15) {
+          result += charSets.empty;
+        } else if (signal > 0.05) {
+          result += charSets.dense;
+        } else {
+          result += charSets.sparse;
+        }
+      }
+
+      asciiEl.textContent = result;
+    }
+
+    generateFrame();
+    const intervalId = setInterval(generateFrame, speed);
+    return () => { clearInterval(intervalId); asciiEl.remove(); };
+  }
+
+  // Inicializar carrusel, animación ASCII y rotación automática
+  renderCarousel();
+  startAutoplay();
+  createAsciiGround({
+    container: '#ascii-ground-container',
+    length: 110,
+    speed: 750
+  });
+</script>

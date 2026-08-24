@@ -1,0 +1,376 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layout/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+export async function getStaticPaths() {
+  const proyectos = await getCollection('proyectos');
+  return proyectos.map((proyecto) => ({
+    params: { id: proyecto.id },
+    props: { proyecto },
+  }));
+}
+
+const { proyecto } = Astro.props;
+const { Content } = await render(proyecto);
+const { data } = proyecto;
+---
+
+<Layout title={`${data.titulo} | Proyecto`}>
+  <div class="min-h-screen flex flex-col justify-between overflow-x-hidden">
+
+    <Header />
+
+    <!-- main: Se incrementó el padding inferior (pb-12) para separar todo el contenido del footer en móvil -->
+    <main class="flex-1 w-full px-4 sm:px-8 pt-5 pb-12 md:py-8 flex flex-col justify-center">
+      <div class="w-full max-w-7xl mx-auto flex flex-col gap-6 md:gap-8">
+
+        <!-- CABECERA DEL PROYECTO -->
+        <div class="pt-1 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+
+          <div class="flex items-center gap-3 flex-wrap min-w-0">
+            <a 
+              href="/" 
+              class="inline-flex items-center gap-1.5 text-xs font-bold text-gray-400 hover:text-black transition-colors uppercase tracking-wider flex-none"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+              Volver al huerto
+            </a>
+
+            <span class="text-gray-300 flex-none">/</span>
+
+            <h1 class="text-xl text-[var(--color-accent)] md:text-3xl lg:text-4xl font-semibold tracking-tight truncate">
+              {data.titulo}
+            </h1>
+          </div>
+
+          <div class="flex items-center gap-1.5 flex-wrap flex-none">
+            {data.categoria.map((cat) => (
+              <span class="inline-flex flex-none text-[10px] font-bold border border-gray-300 px-2.5 py-1 uppercase tracking-wider rounded-md">
+                {cat}
+              </span>
+            ))}
+          </div>
+
+        </div>
+
+        <!-- 2 COLUMNAS PRINCIPALES -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 items-end">
+
+          <!-- COLUMNA IZQUIERDA: Imagen Principal + Selector -->
+          <div class="md:col-span-5 flex flex-col justify-end w-full">
+            <div id="galeria-container" class="relative w-full aspect-[4/3] bg-gray-50 rounded-lg overflow-hidden group touch-pan-y">
+  <img
+    id="proyecto-imagen-principal"
+    src={data.galeriaImagenes && data.galeriaImagenes.length > 0 ? data.galeriaImagenes[0] : data.imagenDestacada}
+    alt={data.titulo}
+    class="w-full h-full object-cover transition-opacity duration-300 select-none"
+  />
+
+              {data.galeriaImagenes && data.galeriaImagenes.length > 1 && (
+                <>
+                  <button
+                    id="btn-prev-img"
+                    aria-label="Imagen anterior"
+                    class="hidden md:flex absolute left-3 top-1/2 -translate-y-1/2 z-40 w-10 h-10 border border-stone-300 bg-white rounded-md hover:bg-[var(--color-accent)] hover:border-[var(--color-accent)] hover:text-white transition-colors items-center justify-center text-stone-700 opacity-0 group-hover:opacity-100 cursor-pointer"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                  </button>
+
+                  <button
+                    id="btn-next-img"
+                    aria-label="Siguiente imagen"
+                    class="hidden md:flex absolute right-3 top-1/2 -translate-y-1/2 z-40 w-10 h-10 border border-stone-300 bg-white rounded-md hover:bg-[var(--color-accent)] hover:border-[var(--color-accent)] hover:text-white transition-colors items-center justify-center text-stone-700 opacity-0 group-hover:opacity-100 cursor-pointer"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                  </button>
+                </>
+              )}
+            </div>
+
+            <!-- Indicadores de Puntos -->
+            {data.galeriaImagenes && data.galeriaImagenes.length > 1 && (
+              <div id="galeria-dots" class="flex items-center justify-center gap-2 mt-4">
+                {data.galeriaImagenes.map((_, i) => (
+                  <button
+                    type="button"
+                    data-index={i}
+                    aria-label={`Ver imagen ${i + 1}`}
+                    class={`dot-btn h-2 rounded-full transition-all cursor-pointer ${i === 0 ? 'bg-black w-5' : 'bg-gray-300 hover:bg-gray-400 w-2'}`}
+                  ></button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <!-- COLUMNA DERECHA: Contenido (Tabs) + Acordeón -->
+          <div class="md:col-span-7 flex flex-col justify-between self-stretch w-full min-w-0 mb-4 md:mb-0">
+
+            <!-- Pestañas (Tabs) y Descripción -->
+            <div class="w-full">
+              {data.secciones && (
+                <div id="tabs-container" class="w-full">
+                  <nav class="flex gap-4 sm:gap-5 text-xs sm:text-sm font-bold overflow-x-auto pb-2">
+                    {data.secciones.encargo && (
+                      <button data-tab="encargo" class="tab-btn pb-2 border-b-2 border-black text-black transition-all cursor-pointer whitespace-nowrap">
+                        El encargo -
+                      </button>
+                    )}
+                    {data.secciones.estrategia && (
+                      <button data-tab="estrategia" class="tab-btn pb-2 border-b-2 border-transparent text-gray-400 hover:text-black transition-all cursor-pointer whitespace-nowrap">
+                        La estrategia +
+                      </button>
+                    )}
+                    {data.secciones.resultado && (
+                      <button data-tab="resultado" class="tab-btn pb-2 border-b-2 border-transparent text-gray-400 hover:text-black transition-all cursor-pointer whitespace-nowrap">
+                        El resultado +
+                      </button>
+                    )}
+                  </nav>
+                  <div class="border-b border-gray-200 -mt-[1px]"></div>
+                </div>
+              )}
+
+              <!-- Contenido de las Pestañas (Se aumentó mb-8 en móvil para separar del acordeón) -->
+              {data.secciones && (
+                <div class="w-full text-gray-500 text-sm leading-relaxed mt-4 md:mt-6 mb-8 md:mb-4">
+                  {data.secciones.encargo && (
+                    <div id="tab-encargo" class="tab-content block">
+                      <p set:html={data.secciones.encargo}></p>
+                    </div>
+                  )}
+                  {data.secciones.estrategia && (
+                    <div id="tab-estrategia" class="tab-content hidden">
+                      <p set:html={data.secciones.estrategia}></p>
+                    </div>
+                  )}
+                  {data.secciones.resultado && (
+                    <div id="tab-resultado" class="tab-content hidden">
+                     <p set:html={data.secciones.resultado}></p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <!-- Acordeón de Detalles (Aumentado mt-10 en móvil para más margen superior) -->
+            {data.detalles && data.detalles.length > 0 && (
+              <div class="mt-10 md:mt-8 w-full">
+                <div class="flex items-end justify-between gap-2 sm:gap-4 md:gap-6 border-b border-gray-200 pb-0 min-h-[120px] md:min-h-[140px] w-full">
+                  {data.detalles.map((detalle, index) => {
+                    const isOpen = index === 0;
+                    return (
+                      <div
+                        data-index={index}
+                        class={`detalle-item flex flex-col justify-between transition-all duration-300 min-w-0 ${isOpen ? 'flex-1' : 'w-16 sm:w-20 md:w-24'}`}
+                      >
+                        <div class="flex items-start gap-2 sm:gap-3 mb-3">
+                          <button
+                            data-index={index}
+                            class="accordion-trigger w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex-none bg-gray-100 rounded-lg overflow-hidden border border-gray-200 cursor-pointer hover:border-black transition-colors"
+                          >
+                            <img src={detalle.imagen} alt={detalle.titulo} class="w-full h-full object-cover pointer-events-none" />
+                          </button>
+
+                          <div class={`info-box text-xs md:text-sm text-gray-600 transition-opacity duration-200 min-w-0 ${isOpen ? 'block opacity-100' : 'hidden opacity-0'}`}>
+                            <button
+                              data-index={index}
+                              class="accordion-trigger font-mono text-gray-500 hover:text-black font-bold mb-1 block cursor-pointer text-xs"
+                            >
+                            </button>
+                              <p 
+                                class="leading-relaxed line-clamp-3 sm:line-clamp-4" 
+                                set:html={detalle.descripcion}
+                              />
+                          </div>
+                        </div>
+
+                        <button
+                          data-index={index}
+                          class={`accordion-trigger group flex items-center justify-between w-full text-left font-bold text-[11px] sm:text-xs md:text-sm pb-2.5 -mb-[1px] border-b-2 transition-all cursor-pointer ${
+                            isOpen
+                              ? 'border-black text-black'
+                              : 'border-transparent text-gray-400 hover:border-black hover:text-black'
+                          }`}
+                        >
+                          <span class="title-text truncate">
+                            {detalle.titulo}
+                          </span>
+                          <span class="symbol font-mono text-xs md:text-sm ml-1 flex-none">
+                            {isOpen ? '-' : '+'}
+                          </span>
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Si tu componente Footer acepta clases, le pasamos py-12 md:py-8 para darle aire interno -->
+    <Footer class="py-12 md:py-8 px-4 sm:px-8" />
+  </div>
+</Layout>
+
+<script define:vars={{ galeriaImagenes: data.galeriaImagenes || [] }}>
+  const mainImg = document.getElementById('proyecto-imagen-principal');
+  const dots = document.querySelectorAll('.dot-btn');
+  const btnPrev = document.getElementById('btn-prev-img');
+  const btnNext = document.getElementById('btn-next-img');
+  const galeriaContainer = document.getElementById('galeria-container');
+
+  let currentIndex = 0;
+
+  function updateImage(newIndex) {
+    if (!mainImg || galeriaImagenes.length === 0) return;
+    
+    if (newIndex < 0) currentIndex = galeriaImagenes.length - 1;
+    else if (newIndex >= galeriaImagenes.length) currentIndex = 0;
+    else currentIndex = newIndex;
+
+    const newSrc = galeriaImagenes[currentIndex];
+
+    mainImg.style.opacity = '0';
+    setTimeout(() => {
+      mainImg.src = newSrc;
+      mainImg.style.opacity = '1';
+    }, 150);
+
+    dots.forEach((d, i) => {
+      if (i === currentIndex) {
+        d.classList.remove('bg-gray-300', 'hover:bg-gray-400', 'w-2');
+        d.classList.add('bg-black', 'w-5');
+      } else {
+        d.classList.remove('bg-black', 'w-5');
+        d.classList.add('bg-gray-300', 'w-2');
+      }
+    });
+  }
+
+  if (btnPrev) btnPrev.addEventListener('click', () => updateImage(currentIndex - 1));
+  if (btnNext) btnNext.addEventListener('click', () => updateImage(currentIndex + 1));
+
+  dots.forEach((dot) => {
+    dot.addEventListener('click', () => {
+      const idx = parseInt(dot.getAttribute('data-index'), 10);
+      updateImage(idx);
+    });
+  });
+
+  if (galeriaContainer && galeriaImagenes.length > 1) {
+    let startX = 0;
+    let endX = 0;
+
+    galeriaContainer.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+    }, { passive: true });
+
+    galeriaContainer.addEventListener('touchend', (e) => {
+      endX = e.changedTouches[0].clientX;
+      handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+      const threshold = 40;
+      const diff = startX - endX;
+
+      if (Math.abs(diff) > threshold) {
+        if (diff > 0) {
+          updateImage(currentIndex + 1);
+        } else {
+          updateImage(currentIndex - 1);
+        }
+      }
+    }
+  }
+</script>
+
+<script>
+  const buttons = document.querySelectorAll('.tab-btn');
+  const contents = document.querySelectorAll('.tab-content');
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const target = btn.getAttribute('data-tab');
+
+      buttons.forEach((b) => {
+        b.classList.remove('border-black', 'text-black');
+        b.classList.add('border-transparent', 'text-gray-400');
+        b.textContent = b.textContent?.replace('-', '+') || '';
+      });
+
+      btn.classList.remove('border-transparent', 'text-gray-400');
+      btn.classList.add('border-black', 'text-black');
+      btn.textContent = btn.textContent?.replace('+', '-') || '';
+
+      contents.forEach((content) => {
+        if (content.id === `tab-${target}`) {
+          content.classList.remove('hidden');
+          content.classList.add('block');
+        } else {
+          content.classList.remove('block');
+          content.classList.add('hidden');
+        }
+      });
+    });
+  });
+
+  const items = document.querySelectorAll('.detalle-item');
+  const triggers = document.querySelectorAll('.accordion-trigger');
+
+  triggers.forEach((trigger) => {
+    trigger.addEventListener('click', () => {
+      const targetIndex = trigger.getAttribute('data-index');
+
+      items.forEach((item) => {
+        const itemIndex = item.getAttribute('data-index');
+        const infoBox = item.querySelector('.info-box');
+        const accordionBtn = item.querySelector('button.border-b-2');
+        const symbol = item.querySelector('.symbol');
+
+        if (itemIndex === targetIndex) {
+          item.classList.remove('w-16', 'sm:w-20', 'md:w-24');
+          item.classList.add('flex-1');
+
+          if (infoBox) {
+            infoBox.classList.remove('hidden');
+            setTimeout(() => infoBox.classList.add('opacity-100'), 10);
+          }
+          if (accordionBtn) {
+            accordionBtn.classList.remove('border-transparent', 'text-gray-400');
+            accordionBtn.classList.add('border-black', 'text-black');
+          }
+          if (symbol) symbol.textContent = '-';
+        } else {
+          item.classList.remove('flex-1');
+          item.classList.add('w-16', 'sm:w-20', 'md:w-24');
+
+          if (infoBox) {
+            infoBox.classList.remove('opacity-100');
+            infoBox.classList.add('hidden');
+          }
+          if (accordionBtn) {
+            accordionBtn.classList.remove('border-black', 'text-black');
+            accordionBtn.classList.add('border-transparent', 'text-gray-400');
+          }
+          if (symbol) symbol.textContent = '+';
+        }
+      });
+    });
+  });
+</script>

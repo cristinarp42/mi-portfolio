@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+:root {
+  --color-accent: #2451D6;
+}
+
+
+@layer base {
+    body{
+        background-color: #FEFDF4;
+
+    }
+}
