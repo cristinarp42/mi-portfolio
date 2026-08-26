@@ -1,13 +1,27 @@
 @import "tailwindcss";
 
 :root {
-  --color-accent: #2451D6;
+  --color-accent: #6B6558;
+  --color-lindo: #6B6558;
 }
 
 
 @layer base {
     body{
-        background-color: #FEFDF4;
+        background-color: #F3ECDE;
+        color: #1A1A1A;
 
     }
+    h2, h3 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+}
+
+
+@layer base {
+  html {
+    font-family: 'Courier Prime', monospace;
+  }
 }

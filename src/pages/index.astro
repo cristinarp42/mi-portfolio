@@ -6,28 +6,52 @@ import JardinCarrusel from '../components/JardinCarrusel.astro';
 ---
 
 <Layout title="Portfolio | Jardín Digital">
-  <!-- Permite scroll libre en móvil (min-h-screen) y bloquea altura fija solo en escritorio (md:h-screen md:overflow-hidden) -->
   <div class="min-h-screen md:h-screen md:overflow-hidden flex flex-col">
 
     <Header />
 
-    <!-- Área interactiva con paddings amplios en móvil (py-12) para más aire -->
     <main
       id="hero-garden"
-      class="flex-1 w-full max-w-5xl mx-auto px-8 sm:px-8 py-12 sm:py-6 flex flex-col items-center justify-between sm:cursor-none overflow-visible md:overflow-hidden"
+      class="flex-1 w-full max-w-5xl mx-auto px-8 sm:px-8 py-8 md:py-4 flex flex-col items-center justify-start md:gap-4 sm:cursor-none overflow-visible md:overflow-hidden"
     >
-      <!-- Cabecera alineada a la izquierda en móvil y centrada en desktop -->
-      <header class="flex flex-col items-start md:items-center gap-2 my-auto select-none w-full">
-        <h1 class="text-3xl sm:text-2xl font-bold tracking-tighter text-left md:text-center max-w-lg leading-tight">
-          Hola, estás en mi huerto.
-        </h1>
-        <h2 class="text-lg sm:text-base tracking-tight text-left md:text-center max-w-md leading-normal text-stone-500">
-          Cada plantita es un proyecto. Riégala para descubrirlo.
-        </h2>
+      <!-- Header: Izquierda en móvil (items-start), centrado en desktop (md:items-center) -->
+      <header class="flex flex-col items-start md:items-center justify-center gap-2 my-5 md:my-0 select-none w-full md:text-center text-left">
+        
+        <!-- Bloque contenedor alineado a la izquierda -->
+        <div class="inline-flex flex-col items-start justify-start md:justify-center text-left md:text-center w-full sm:w-auto">
+          
+          <!-- Título principal -->
+          <h1 class="text-lg sm:text-2xl font-bold tracking-tight text-stone-900 leading-tight flex flex-col items-start md:item-center justify-start md:justify-center">
+            <!-- Línea 1 -->
+            <span class="whitespace-nowrap">Pasa, aquí estoy cultivando</span>
+            
+            <!-- Línea 2: Texto fijo + animación con caja estática -->
+            <span class="inline-flex items-center justify-start gap-x-2 flex-wrap text-left">
+              <span class="whitespace-nowrap">proyectos de</span>
+              
+              <!-- Caja rígida para bloquear el movimiento al cambiar palabras -->
+              <span class="inline-flex h-[1.25em] w-[14rem] sm:w-[18rem] overflow-hidden text-[var(--color-accent)] font-extrabold align-bottom justify-start flex-none">
+                <span 
+                  id="slot-word" 
+                  class="inline-block transition-transform duration-500 ease-[cubic-bezier(0.83,0,0.17,1)] text-left whitespace-nowrap"
+                >
+                  branding.
+                </span>
+              </span>
+            </span>
+          </h1>
+
+          <!-- Subtítulo apoyado en el mismo margen -->
+          <p class="md:text-lg text-xs tracking-tight text-left max-w-md leading-snug text-stone-500 mt-1">
+            Coge la regadera y explóralos.
+          </p>
+
+        </div>
+
       </header>
 
-      <!-- Contenedor del Carrusel con margen vertical adicional en móvil -->
-      <div class="w-full flex-1 flex items-center justify-center my-6 md:my-auto">
+      <!-- Carrusel -->
+      <div class="w-full flex-1 md:flex-none flex items-center justify-center my-6 md:my-0">
         <JardinCarrusel />
       </div>
     </main>
@@ -36,3 +60,33 @@ import JardinCarrusel from '../components/JardinCarrusel.astro';
 
   </div>
 </Layout>
+
+<script>
+  const words = ['branding.', 'desarrollo frontend.', 'diseño gráfico.', 'vídeo.'];
+  let currentIndex = 0;
+  const wordEl = document.getElementById('slot-word');
+
+  if (wordEl) {
+    setInterval(() => {
+      // 1. Barrido hacia arriba
+      wordEl.style.transform = 'translateY(-120%)';
+
+      setTimeout(() => {
+        // 2. Teletransporte invisible abajo
+        wordEl.style.transition = 'none';
+        currentIndex = (currentIndex + 1) % words.length;
+        wordEl.textContent = words[currentIndex];
+        wordEl.style.transform = 'translateY(120%)';
+
+        // 3. Entrada fluida al centro
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            wordEl.style.transition = 'transform 500ms cubic-bezier(0.83, 0, 0.17, 1)';
+            wordEl.style.transform = 'translateY(0%)';
+          });
+        });
+      }, 500);
+
+    }, 2500);
+  }
+</script>

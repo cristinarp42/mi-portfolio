@@ -2,10 +2,10 @@
 titulo: "Smart Economato"
 subtituloBreve: "Plataforma web para la gestión de inventario, pedidos y alérgenos."
 categoria: ["FRONTEND", "WEB APP", "UI/UX"]
-ilustracion: "/images/proyectos/flor-frame-04.svg"
+ilustracion: "/images/proyectos/flor-frame-04.png"
 animacionLottie: "/lottie/planta2.json"
 orden: 2
-imagenDestacada: "/images/proyectos/huerto.jpg"
+imagenDestacada: "/images/proyectos/huerto.png"
 fecha: "2026"
 linkProyecto: "https://ejemplo.com"
 secciones:
