@@ -18,19 +18,19 @@ import JardinCarrusel from '../components/JardinCarrusel.astro';
       <header class="flex flex-col items-start md:items-center justify-center gap-2 my-5 md:my-0 select-none w-full md:text-center text-left">
         
         <!-- Bloque contenedor alineado a la izquierda -->
-        <div class="inline-flex flex-col items-start justify-start md:justify-center text-left md:text-center w-full sm:w-auto">
+        <div class="inline-flex flex-col items-center justify-center md:justify-center text-left md:text-center w-full sm:w-auto">
           
           <!-- Título principal -->
-          <h1 class="text-lg sm:text-2xl font-bold tracking-tight text-stone-900 leading-tight flex flex-col items-start md:item-center justify-start md:justify-center">
+          <h1 class="text-lg sm:text-xl font-bold tracking-tight text-stone-900 leading-tight flex flex-col items-center md:item-center justify-center md:justify-center">
             <!-- Línea 1 -->
-            <span class="whitespace-nowrap">Pasa, aquí estoy cultivando</span>
+            <span class="whitespace-nowrap">Pasa, aquí estoy </span>
+            <span class="whitespace-nowrap">cultivando proyectos de </span>
             
             <!-- Línea 2: Texto fijo + animación con caja estática -->
-            <span class="inline-flex items-center justify-start gap-x-2 flex-wrap text-left">
-              <span class="whitespace-nowrap">proyectos de</span>
+            <span class="inline-flex items-center justify-center gap-x-2 flex-wrap text-left">
               
               <!-- Caja rígida para bloquear el movimiento al cambiar palabras -->
-              <span class="inline-flex h-[1.25em] w-[14rem] sm:w-[18rem] overflow-hidden text-[var(--color-accent)] font-extrabold align-bottom justify-start flex-none">
+              <span class="inline-flex h-[1.25em] w-[14rem] sm:w-[18rem] overflow-hidden text-[var(--color-accent)] font-extrabold align-bottom justify-center flex-none">
                 <span 
                   id="slot-word" 
                   class="inline-block transition-transform duration-500 ease-[cubic-bezier(0.83,0,0.17,1)] text-left whitespace-nowrap"
@@ -42,7 +42,7 @@ import JardinCarrusel from '../components/JardinCarrusel.astro';
           </h1>
 
           <!-- Subtítulo apoyado en el mismo margen -->
-          <p class="md:text-lg text-xs tracking-tight text-left max-w-md leading-snug text-stone-500 mt-1">
+          <p class="md:text-lg hidden text-xs tracking-tight text-left max-w-md leading-snug text-stone-500 mt-1">
             Coge la regadera y explóralos.
           </p>
 

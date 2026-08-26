@@ -15,6 +15,14 @@ export async function getStaticPaths() {
 const { proyecto } = Astro.props;
 const { Content } = await render(proyecto);
 const { data } = proyecto;
+
+// Preparamos la galería o una imagen destacada como fallback
+const galeria = data.galeriaImagenes && data.galeriaImagenes.length > 0 
+  ? data.galeriaImagenes 
+  : (data.imagenDestacada ? [data.imagenDestacada] : []);
+
+const primeraMedia = galeria[0] || '';
+const esVideoInicial = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(primeraMedia.trim());
 ---
 
 <Layout title={`${data.titulo} | Proyecto`}>
@@ -61,22 +69,60 @@ const { data } = proyecto;
         <!-- 2 COLUMNAS PRINCIPALES -->
         <div class="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 items-end">
 
-          <!-- COLUMNA IZQUIERDA: Imagen Principal + Selector -->
+          <!-- COLUMNA IZQUIERDA: Galería / Imagen / Vídeo Principal -->
           <div class="md:col-span-5 flex flex-col justify-end w-full">
-            <div id="galeria-container" class="relative w-full aspect-[4/3] bg-gray-50 rounded-lg overflow-hidden group touch-pan-y">
-  <img
-    id="proyecto-imagen-principal"
-    src={data.galeriaImagenes && data.galeriaImagenes.length > 0 ? data.galeriaImagenes[0] : data.imagenDestacada}
-    alt={data.titulo}
-    class="w-full h-full object-cover transition-opacity duration-300 select-none"
-  />
+            <!-- Contenedor ajustado con marco/borde muy fino y bordes redondeados suavemente -->
+            <div id="galeria-container" class="relative w-full aspect-[4/3] bg-gray-50 rounded-xl border border-stone-200/80 shadow-sm overflow-hidden group touch-pan-y">
+              
+              <!-- Botón Audio (Mute / Unmute) para Vídeos -->
+              <button
+                id="btn-toggle-audio"
+                type="button"
+                aria-label="Activar o desactivar sonido"
+                class={`absolute top-3 right-3 z-40 w-9 h-9 border border-stone-200 bg-white/90 backdrop-blur-sm rounded-md hover:bg-black hover:border-black hover:text-white transition-all items-center justify-center text-stone-700 shadow-sm cursor-pointer ${esVideoInicial ? 'flex' : 'hidden'}`}
+              >
+                <!-- Icono de Sonido Desactivado (Muted) por defecto -->
+                <svg id="icon-muted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+                  <line x1="23" y1="9" x2="17" y2="15"/>
+                  <line x1="17" y1="9" x2="23" y2="15"/>
+                </svg>
+                <!-- Icono de Sonido Activado (Unmuted) -->
+                <svg id="icon-unmuted" class="hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                </svg>
+              </button>
 
-              {data.galeriaImagenes && data.galeriaImagenes.length > 1 && (
+              <!-- Wrapper flexible para alternar entre IMG y VIDEO -->
+              <div id="media-wrapper" class="w-full h-full transition-opacity duration-300">
+                {esVideoInicial ? (
+                  <video
+                    id="proyecto-media-principal"
+                    src={primeraMedia}
+                    autoplay
+                    loop
+                    muted
+                    playsinline
+                    webkit-playsinline
+                    class="w-full h-full object-cover select-none"
+                  ></video>
+                ) : (
+                  <img
+                    id="proyecto-media-principal"
+                    src={primeraMedia}
+                    alt={data.titulo}
+                    class="w-full h-full object-cover select-none"
+                  />
+                )}
+              </div>
+
+              {galeria.length > 1 && (
                 <>
                   <button
                     id="btn-prev-img"
-                    aria-label="Imagen anterior"
-                    class="hidden md:flex absolute left-3 top-1/2 -translate-y-1/2 z-40 w-10 h-10 border border-stone-300 bg-white rounded-md hover:bg-[var(--color-accent)] hover:border-[var(--color-accent)] hover:text-white transition-colors items-center justify-center text-stone-700 opacity-0 group-hover:opacity-100 cursor-pointer"
+                    aria-label="Anterior"
+                    class="hidden md:flex absolute left-3 top-1/2 -translate-y-1/2 z-40 w-10 h-10 border border-stone-300 bg-white/90 backdrop-blur-sm rounded-md hover:bg-[var(--color-accent)] hover:border-[var(--color-accent)] hover:text-white transition-colors items-center justify-center text-stone-700 opacity-0 group-hover:opacity-100 cursor-pointer shadow-sm"
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M15 18l-6-6 6-6"/>
@@ -85,8 +131,8 @@ const { data } = proyecto;
 
                   <button
                     id="btn-next-img"
-                    aria-label="Siguiente imagen"
-                    class="hidden md:flex absolute right-3 top-1/2 -translate-y-1/2 z-40 w-10 h-10 border border-stone-300 bg-white rounded-md hover:bg-[var(--color-accent)] hover:border-[var(--color-accent)] hover:text-white transition-colors items-center justify-center text-stone-700 opacity-0 group-hover:opacity-100 cursor-pointer"
+                    aria-label="Siguiente"
+                    class="hidden md:flex absolute right-3 top-1/2 -translate-y-1/2 z-40 w-10 h-10 border border-stone-300 bg-white/90 backdrop-blur-sm rounded-md hover:bg-[var(--color-accent)] hover:border-[var(--color-accent)] hover:text-white transition-colors items-center justify-center text-stone-700 opacity-0 group-hover:opacity-100 cursor-pointer shadow-sm"
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M9 18l6-6-6-6"/>
@@ -97,13 +143,13 @@ const { data } = proyecto;
             </div>
 
             <!-- Indicadores de Puntos -->
-            {data.galeriaImagenes && data.galeriaImagenes.length > 1 && (
+            {galeria.length > 1 && (
               <div id="galeria-dots" class="flex items-center justify-center gap-2 mt-4">
-                {data.galeriaImagenes.map((_, i) => (
+                {galeria.map((_, i) => (
                   <button
                     type="button"
                     data-index={i}
-                    aria-label={`Ver imagen ${i + 1}`}
+                    aria-label={`Ver elemento ${i + 1}`}
                     class={`dot-btn h-2 rounded-full transition-all cursor-pointer ${i === 0 ? 'bg-black w-5' : 'bg-gray-300 hover:bg-gray-400 w-2'}`}
                   ></button>
                 ))}
@@ -139,7 +185,7 @@ const { data } = proyecto;
                 </div>
               )}
 
-              <!-- Contenido de las Pestañas (Se aumentó mb-8 en móvil para separar del acordeón) -->
+              <!-- Contenido de las Pestañas -->
               {data.secciones && (
                 <div class="w-full text-gray-500 text-sm leading-relaxed mt-4 md:mt-6 mb-8 md:mb-4">
                   {data.secciones.encargo && (
@@ -154,14 +200,14 @@ const { data } = proyecto;
                   )}
                   {data.secciones.resultado && (
                     <div id="tab-resultado" class="tab-content hidden">
-                     <p set:html={data.secciones.resultado}></p>
+                      <p set:html={data.secciones.resultado}></p>
                     </div>
                   )}
                 </div>
               )}
             </div>
 
-            <!-- Acordeón de Detalles (Aumentado mt-10 en móvil para más margen superior) -->
+            <!-- Acordeón de Detalles -->
             {data.detalles && data.detalles.length > 0 && (
               <div class="mt-10 md:mt-8 w-full">
                 <div class="flex items-end justify-between gap-2 sm:gap-4 md:gap-6 border-b border-gray-200 pb-0 min-h-[120px] md:min-h-[140px] w-full">
@@ -222,35 +268,103 @@ const { data } = proyecto;
       </div>
     </main>
 
-    <!-- Si tu componente Footer acepta clases, le pasamos py-12 md:py-8 para darle aire interno -->
     <Footer class="py-12 md:py-8 px-4 sm:px-8" />
   </div>
 </Layout>
 
-<script define:vars={{ galeriaImagenes: data.galeriaImagenes || [] }}>
-  const mainImg = document.getElementById('proyecto-imagen-principal');
+<script define:vars={{ galeriaImagenes: galeria, tituloProyecto: data.titulo }}>
+  const mediaWrapper = document.getElementById('media-wrapper');
   const dots = document.querySelectorAll('.dot-btn');
   const btnPrev = document.getElementById('btn-prev-img');
   const btnNext = document.getElementById('btn-next-img');
   const galeriaContainer = document.getElementById('galeria-container');
+  const btnAudio = document.getElementById('btn-toggle-audio');
+  const iconMuted = document.getElementById('icon-muted');
+  const iconUnmuted = document.getElementById('icon-unmuted');
 
   let currentIndex = 0;
+  let isAudioMuted = true; // Estado global del audio
 
-  function updateImage(newIndex) {
-    if (!mainImg || galeriaImagenes.length === 0) return;
+  function isVideo(url) {
+    return typeof url === 'string' && /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(url.trim());
+  }
+
+  function updateAudioButtonUI() {
+    if (isAudioMuted) {
+      iconMuted?.classList.remove('hidden');
+      iconUnmuted?.classList.add('hidden');
+    } else {
+      iconMuted?.classList.add('hidden');
+      iconUnmuted?.classList.remove('hidden');
+    }
+  }
+
+  function toggleAudio() {
+    const video = mediaWrapper.querySelector('video');
+    if (video) {
+      isAudioMuted = !isAudioMuted;
+      video.muted = isAudioMuted;
+      updateAudioButtonUI();
+    }
+  }
+
+  if (btnAudio) {
+    btnAudio.addEventListener('click', toggleAudio);
+  }
+
+  function updateMedia(newIndex) {
+    if (!mediaWrapper || galeriaImagenes.length === 0) return;
     
     if (newIndex < 0) currentIndex = galeriaImagenes.length - 1;
     else if (newIndex >= galeriaImagenes.length) currentIndex = 0;
     else currentIndex = newIndex;
 
     const newSrc = galeriaImagenes[currentIndex];
+    const isVid = isVideo(newSrc);
 
-    mainImg.style.opacity = '0';
+    // Mostrar u ocultar el botón de volumen si es un vídeo o una imagen
+    if (btnAudio) {
+      if (isVid) {
+        btnAudio.classList.remove('hidden');
+        btnAudio.classList.add('flex');
+      } else {
+        btnAudio.classList.remove('flex');
+        btnAudio.classList.add('hidden');
+      }
+    }
+
+    // Transición suave
+    mediaWrapper.style.opacity = '0';
+
     setTimeout(() => {
-      mainImg.src = newSrc;
-      mainImg.style.opacity = '1';
+      mediaWrapper.innerHTML = '';
+
+      if (isVid) {
+        const video = document.createElement('video');
+        video.id = 'proyecto-media-principal';
+        video.src = newSrc;
+        video.autoplay = true;
+        video.loop = true;
+        video.muted = isAudioMuted; // Respeta el estado de mute/unmute actual
+        video.playsInline = true;
+        video.className = 'w-full h-full object-cover select-none';
+        
+        mediaWrapper.appendChild(video);
+        video.play().catch(() => {});
+      } else {
+        const img = document.createElement('img');
+        img.id = 'proyecto-media-principal';
+        img.src = newSrc;
+        img.alt = tituloProyecto || 'Proyecto';
+        img.className = 'w-full h-full object-cover select-none';
+        
+        mediaWrapper.appendChild(img);
+      }
+
+      mediaWrapper.style.opacity = '1';
     }, 150);
 
+    // Actualizar puntos de paginación
     dots.forEach((d, i) => {
       if (i === currentIndex) {
         d.classList.remove('bg-gray-300', 'hover:bg-gray-400', 'w-2');
@@ -262,13 +376,13 @@ const { data } = proyecto;
     });
   }
 
-  if (btnPrev) btnPrev.addEventListener('click', () => updateImage(currentIndex - 1));
-  if (btnNext) btnNext.addEventListener('click', () => updateImage(currentIndex + 1));
+  if (btnPrev) btnPrev.addEventListener('click', () => updateMedia(currentIndex - 1));
+  if (btnNext) btnNext.addEventListener('click', () => updateMedia(currentIndex + 1));
 
   dots.forEach((dot) => {
     dot.addEventListener('click', () => {
       const idx = parseInt(dot.getAttribute('data-index'), 10);
-      updateImage(idx);
+      updateMedia(idx);
     });
   });
 
@@ -291,9 +405,9 @@ const { data } = proyecto;
 
       if (Math.abs(diff) > threshold) {
         if (diff > 0) {
-          updateImage(currentIndex + 1);
+          updateMedia(currentIndex + 1);
         } else {
-          updateImage(currentIndex - 1);
+          updateMedia(currentIndex - 1);
         }
       }
     }
@@ -301,6 +415,7 @@ const { data } = proyecto;
 </script>
 
 <script>
+  // Script para las Pestañas y Acordeón
   const buttons = document.querySelectorAll('.tab-btn');
   const contents = document.querySelectorAll('.tab-content');
 

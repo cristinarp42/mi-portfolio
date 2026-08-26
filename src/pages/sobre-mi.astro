@@ -1,0 +1,43 @@
+---
+import Layout from '../layout/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Sobre mí - Cristina">
+  <div class="min-h-screen flex flex-col justify-between bg-stone-50 text-stone-800">
+    <Header />
+
+    <main class="flex-1 flex items-center justify-center px-6 py-30 md:py-12">
+      <div class="max-w-sm text-center flex flex-col items-center">
+        
+        <!-- Imagen pequeña cuadrada -->
+        <div class="w-24 h-24 md:w-28 md:h-28 overflow-hidden  mb-8 flex-none">
+          <img 
+            src="/images/sobre-mi/sobre-mi-01.jpeg" 
+            alt="Cristina cultivando" 
+            class="w-full h-full object-cover"
+          />
+        </div>
+
+        <!-- Parrafo 1: Introducción -->
+        <p class=" px-10 text-sm md:text-sm leading-relaxed md:leading-loose text-stone-700 font-light">
+          Este portfolio junta las piezas de todo lo que me apasiona y cómo entiendo mi trabajo: con <strong class="font-semibold text-stone-900">atención al detalle</strong>, <strong class="font-semibold text-stone-900">proceso</strong> y <strong class="font-semibold text-stone-900">mimo</strong>.
+        </p>
+
+        <!-- Parrafo 2: Cierre -->
+        <p class="mt-6 text-sm md:text-sm text-stone-800 font-normal">
+          Con cariño, <strong class="font-semibold text-stone-900">Cristina</strong>.
+        </p>
+
+        <!-- Nota final -->
+        <span class="block mt-4 text-[10px] text-stone-500 font-normal">
+          < Encantada de que estés al otro lado >.
+        </span>
+
+      </div>
+    </main>
+
+    <Footer />
+  </div>
+</Layout>

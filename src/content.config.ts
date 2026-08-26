@@ -12,6 +12,7 @@ const proyectosCollection = defineCollection({
     subtituloBreve: z.string(),
     categoria: z.array(z.string()),
     ilustracion: z.string().optional(),
+    videoIlustracion: z.string().optional(),
     animacionLottie: z.string().optional(),
     orden: z.number(),
     imagenDestacada: z.string(),
