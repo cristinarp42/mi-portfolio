@@ -1,10 +1,14 @@
+---
+// src/components/Header.astro
+---
+
 <header class="relative w-full px-4 sm:px-8 py-5 flex items-center justify-between border-b border-stone-100">
 
   <!-- IZQUIERDA: Logo + tagline -->
   <a href="/" class="group flex items-center gap-4 z-20">
-    <img 
-      src="/logo.svg" 
-      alt="Logo" 
+    <img
+      src="/logo.svg"
+      alt="Logo"
       class="h-8 w-auto flex-none opacity-80"
     />
 
@@ -27,24 +31,179 @@
     </svg>
   </button>
 
-  <!-- DERECHA: Navegación -->
-<nav id="menu" class="hidden md:flex absolute md:static top-full md:top-auto left-0 right-0 bg-white md:bg-transparent shadow-lg md:shadow-none p-6 md:p-0 flex-col md:flex-row items-center gap-6 sm:gap-10 text-sm font-medium text-stone-600 tracking-wide z-10">
-  <a href="/" class="hover:text-[var(--color-accent)] transition-colors">home</a>
-  <a href="#proyectos" class="hover:text-[var(--color-accent)] transition-colors">proyectos</a>
-  <a href="/sobre-mi" class="hover:text-[var(--color-accent)] transition-colors">sobre mí</a>
-  <a href="#curriculum" class="hover:text-[var(--color-accent)] transition-colors">currículum</a>
-</nav>
+  <!-- DERECHA: Navegación Desktop -->
+  <nav class="hidden md:flex items-center gap-6 sm:gap-10 text-sm font-medium text-stone-600 tracking-wide">
+    <a href="/" class="hover:text-[var(--color-accent)] transition-colors">home</a>
+    <a href="#proyectos" class="hover:text-[var(--color-accent)] transition-colors">proyectos</a>
+    <a href="/sobre-mi" class="hover:text-[var(--color-accent)] transition-colors">sobre mí</a>
+    <a
+      href="/CV_Cristina_Rodriguez.pdf"
+      download="CV_Cristina_Rodriguez.pdf"
+      class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[var(--color-accent)] hover:bg-stone-900 rounded-md transition-all duration-200 cursor-pointer shadow-sm hover:shadow"
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+        <polyline points="7 10 12 15 17 10" />
+        <line x1="12" x2="12" y1="15" y2="3" />
+      </svg>
+      <span>Currículum</span>
+    </a>
+  </nav>
 
 </header>
 
+<!-- MENÚ MÓVIL A PANTALLA COMPLETA -->
+<div
+  id="mobile-menu"
+  class="hidden fixed inset-0 z-50 bg-white flex-col md:hidden"
+>
+  <!-- Cabecera del menú: logo a un lado, cerrar al otro -->
+  <div class="w-full px-4 sm:px-8 py-5 flex items-center justify-between border-b border-stone-100 flex-none">
+    <a href="/" class="flex items-center gap-3">
+      <img src="/logo.svg" alt="Logo" class="h-8 w-auto flex-none opacity-80" />
+    </a>
+
+    <button id="menu-close" aria-label="Cerrar menú" class="text-stone-600 hover:text-[var(--color-accent)] p-1">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+
+  <!-- BLOQUE DE NAVEGACIÓN: Home / Proyectos / Sobre mí / Descargar currículum -->
+  <nav class="flex-1 flex flex-col px-4 sm:px-8 justify-center overflow-y-auto">
+    <a href="/" class="mobile-link py-5 border-b border-stone-100 text-2xl font-medium text-stone-900 hover:text-[var(--color-accent)] transition-colors">
+      Home
+    </a>
+    <a href="#proyectos" class="mobile-link py-5 border-b border-stone-100 text-2xl font-medium text-stone-900 hover:text-[var(--color-accent)] transition-colors">
+      Proyectos
+    </a>
+    <a href="/sobre-mi" class="mobile-link py-5 border-b border-stone-100 text-2xl font-medium text-stone-900 hover:text-[var(--color-accent)] transition-colors">
+      Sobre mí
+    </a>
+    <a
+      href="/CV_Cristina_Rodriguez.pdf"
+      download="CV_Cristina_Rodriguez.pdf"
+      class="mobile-link py-5 border-b border-stone-100 flex items-center justify-between text-2xl font-medium text-[var(--color-accent)] transition-colors"
+    >
+      <span>Descargar currículum</span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="flex-none">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+        <polyline points="7 10 12 15 17 10" />
+        <line x1="12" x2="12" y1="15" y2="3" />
+      </svg>
+    </a>
+  </nav>
+
+  <!-- BLOQUE INFERIOR: el email como firma personal, no como "footer" aparte -->
+  <div class="flex-none w-full px-4 sm:px-8 pt-6 pb-8">
+
+    <span class="block text-[10px] uppercase tracking-[0.15em] text-stone-400 font-medium mb-2">
+      Escríbeme
+    </span>
+
+    <button
+      id="mobile-email-copy-btn"
+      class="group inline-flex items-baseline gap-2 cursor-pointer"
+      data-email="hola@crodriguezperez.com"
+      aria-label="Copiar correo electrónico"
+    >
+      <span class="text-xl sm:text-2xl font-medium text-stone-900 group-hover:text-[var(--color-accent)] transition-colors border-b-2 border-stone-200 group-hover:border-[var(--color-accent)] pb-0.5">
+        hola@crodriguezperez.com
+      </span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="text-stone-300 group-hover:text-[var(--color-accent)] transition-colors flex-none translate-y-[-2px]">
+        <rect x="9" y="9" width="12" height="12" rx="2"/>
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+      </svg>
+    </button>
+
+    <!-- Fila fina: redes como texto, copyright al otro lado -->
+    <div class="flex items-center justify-between mt-6 pt-4 border-t border-stone-100">
+      <div class="flex items-center gap-3 text-[11px] font-medium text-stone-500 tracking-wide">
+        <a href="https://github.com/tuusuario" class="hover:text-[var(--color-accent)] transition-colors">GitHub</a>
+        <span class="text-stone-300">·</span>
+        <a href="https://linkedin.com/in/tuusuario" class="hover:text-[var(--color-accent)] transition-colors">LinkedIn</a>
+      </div>
+
+      <p class="text-[11px] text-stone-400 whitespace-nowrap">
+        © 2026 n.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Notificación -->
+<div
+  id="copy-toast"
+  class="fixed bottom-8 left-1/2 -translate-x-1/2 translate-y-4 opacity-0 pointer-events-none transition-all duration-300 bg-stone-900 text-white text-xs px-4 py-2 rounded-full flex items-center gap-2 z-[60] shadow-xl"
+>
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400">
+    <polyline points="20 6 9 17 4 12"/>
+  </svg>
+  Email copiado al portapapeles
+</div>
+
 <script>
   const menuToggle = document.getElementById('menu-toggle');
-  const menu = document.getElementById('menu');
+  const menuClose = document.getElementById('menu-close');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const mobileLinks = document.querySelectorAll('.mobile-link');
+  const toast = document.getElementById('copy-toast');
 
-  if (menuToggle && menu) {
-    menuToggle.addEventListener('click', () => {
-      menu.classList.toggle('hidden');
-      menu.classList.toggle('flex');
-    });
+  function openMenu() {
+    mobileMenu?.classList.remove('hidden');
+    mobileMenu?.classList.add('flex');
+    document.body.style.overflow = 'hidden';
   }
+
+  function closeMenu() {
+    mobileMenu?.classList.remove('flex');
+    mobileMenu?.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  menuToggle?.addEventListener('click', openMenu);
+  menuClose?.addEventListener('click', closeMenu);
+
+
+  mobileLinks.forEach((link) => link.addEventListener('click', closeMenu));
+
+  function showToast() {
+    if (!toast) return;
+    toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+    toast.classList.add('opacity-100', '-translate-y-2');
+
+    setTimeout(() => {
+      toast.classList.remove('opacity-100', '-translate-y-2');
+      toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+    }, 2000);
+  }
+
+  async function copyEmail(email) {
+    try {
+      await navigator.clipboard.writeText(email);
+    } catch (err) {
+      const textarea = document.createElement('textarea');
+      textarea.value = email;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+    }
+    showToast();
+  }
+
+
+  const mobileEmailBtn = document.getElementById('mobile-email-copy-btn');
+  mobileEmailBtn?.addEventListener('click', () => {
+    const email = mobileEmailBtn.getAttribute('data-email');
+    if (email) copyEmail(email);
+  });
+
+  const desktopEmailBtn = document.getElementById('email-copy-btn');
+  desktopEmailBtn?.addEventListener('click', () => {
+    const email = desktopEmailBtn.getAttribute('data-email');
+    if (email) copyEmail(email);
+  });
 </script>
