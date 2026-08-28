@@ -5,6 +5,8 @@ categoria: ["REBRANDING", "WEB"]
 ilustracion: "/images/proyectos/beterrada-frame-03.svg"
 # Opcional: si la ilustración principal del carrusel es un vídeo:
 videoIlustracion: "/images/proyectos/la-despensa-de-peter/peter-video.mp4"
+ilustracionSprite: "/images/proyectos/sprite_planta_v2.png"
+spriteFrames: 4
 orden: 1
 imagenDestacada: "/images/proyectos/la-despensa-de-peter/peter-1.png"
 fecha: "2026"

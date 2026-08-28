@@ -11,11 +11,13 @@ const proyectosData = proyectos.map((p) => ({
   subtituloBreve: p.data.subtituloBreve,
   categoria: p.data.categoria,
   ilustracion: p.data.ilustracion || '',
+  ilustracionSprite: p.data.ilustracionSprite || '',
+  spriteFrames: p.data.spriteFrames || 4,
   animacionLottie: p.data.animacionLottie || ''
 }));
 ---
 
-<div id="carrusel-container" class="group relative w-full max-w-5xl mx-auto pt-0 pb-4 md:py-2 px-4 select-none touch-pan-y">
+<div id="carrusel-container" class="relative w-full max-w-5xl mx-auto pt-0 pb-4 md:py-2 px-4 select-none touch-pan-y">
   <!-- LÍNEA DE TIERRA ASCII (Detrás de los elementos) -->
   <div 
     id="ascii-ground-container" 
@@ -26,20 +28,20 @@ const proyectosData = proyectos.map((p) => ({
   <div class="relative z-10 grid grid-cols-1 md:grid-cols-3 items-center gap-6 min-h-0">
     
     <!-- Slot 0: Planta Izquierda (Oculta en Móvil) -->
-    <div id="slot-0" class="hidden md:flex justify-center items-center relative z-10 -translate-y-6 transition-transform duration-500 origin-bottom">
+    <div id="slot-0" class="hidden md:flex justify-center items-center relative z-10 -translate-y-6  origin-bottom">
       <!-- Inyectado por JS -->
     </div>
 
     <!-- Slot 1: Planta Central + Tarjeta Transparente -->
     <div class="relative flex justify-center items-center z-30 translate-y-0 md:translate-y-5">
       <!-- Tarjeta Central (100% Transparente) -->
-      <div id="slot-1" class="w-full flex justify-center items-center transition-transform duration-500 origin-bottom">
+      <div id="slot-1" class="w-full flex justify-center items-center origin-bottom">
         <!-- Inyectado por JS -->
       </div>
     </div>
 
     <!-- Slot 2: Planta Derecha (Oculta en Móvil) -->
-    <div id="slot-2" class="hidden md:flex justify-center items-center relative z-10 -translate-y-5 transition-transform duration-500 origin-bottom">
+    <div id="slot-2" class="hidden md:flex justify-center items-center relative z-10 -translate-y-5  origin-bottom">
       <!-- Inyectado por JS -->
     </div>
 
@@ -54,7 +56,7 @@ const proyectosData = proyectos.map((p) => ({
   <button
     id="btn-prev"
     aria-label="Proyecto anterior"
-    class="hidden md:flex absolute left-3 bottom-3 z-40 w-10 h-10 border border-stone-300 bg-white rounded-md hover:bg-[var(--color-accent)] hover:border-[var(--color-accent)] hover:text-white transition-colors items-center justify-center text-stone-700 opacity-0 group-hover:opacity-100 cursor-pointer"
+    class="hidden md:flex absolute left-3 bottom-3 z-40 w-10 h-10 border border-stone-300 bg-white rounded-md hover:bg-[var(--color-accent)] hover:border-[var(--color-accent)] hover:text-white transition-colors items-center justify-center text-stone-700 opacity-0 cursor-pointer"
   >
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M15 18l-6-6 6-6"/>
@@ -64,7 +66,7 @@ const proyectosData = proyectos.map((p) => ({
   <button
     id="btn-next"
     aria-label="Siguiente proyecto"
-    class="hidden md:flex absolute right-3 bottom-3 z-40 w-10 h-10 border border-stone-300 bg-white rounded-md hover:bg-[var(--color-accent)] hover:border-[var(--color-accent)] hover:text-white transition-colors items-center justify-center text-stone-700 opacity-0 group-hover:opacity-100 cursor-pointer"
+    class="hidden md:flex absolute right-3 bottom-3 z-40 w-10 h-10 border border-stone-300 bg-white rounded-md hover:bg-[var(--color-accent)] hover:border-[var(--color-accent)] hover:text-white transition-colors items-center justify-center text-stone-700 opacity-0 cursor-pointer"
   >
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M9 18l6-6-6-6"/>
@@ -73,7 +75,7 @@ const proyectosData = proyectos.map((p) => ({
 
 </div>
 
-<!-- Estilos para la línea ASCII -->
+<!-- Estilos para la línea ASCII y el sprite -->
 <style>
   :global(.ascii-ground) {
     font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
@@ -87,6 +89,34 @@ const proyectosData = proyectos.map((p) => ({
     line-height: 1;
     font-size: 1.1rem;
     letter-spacing: -0.05em;
+  }
+
+  /* Botones prev/next: visibles solo al pasar el ratón por el carrusel entero.
+     Usamos el ID en vez de una clase .group para no chocar con el .group
+     de las tarjetas individuales (ese conflicto era el causante de que el
+     hover del sprite solo funcionara una vez). */
+  :global(#carrusel-container:hover #btn-prev),
+  :global(#carrusel-container:hover #btn-next) {
+    opacity: 1;
+  }
+
+  /* Sprite de la planta animada.
+     aspect-[2/3] en el propio elemento (ver abajo en el JS) evita que se
+     deforme sea cual sea la forma del contenedor padre. */
+  :global(.planta-sprite) {
+    background-repeat: no-repeat;
+    background-position: 0% 0%;
+    background-size: calc(var(--frames) * 100%) 100%;
+  }
+
+  /* Solo el .group de cada tarjeta individual dispara esta animación */
+  :global(.group:hover .planta-sprite) {
+    animation: planta-sprite-hover 0.6s steps(3) forwards;
+  }
+
+  @keyframes planta-sprite-hover {
+    from { background-position: 0% 0%; }
+    to   { background-position: 100% 0%; }
   }
 </style>
 
@@ -107,6 +137,19 @@ const proyectosData = proyectos.map((p) => ({
   function getProject(index) {
     const normIndex = (index % total + total) % total;
     return proyectosData[normIndex];
+  }
+
+  // Genera el HTML de la imagen/sprite/emoji para un proyecto dado.
+  // Centralizado aquí para no repetir (y no volver a desalinear) la lógica
+  // en los tres slots.
+  function renderIlustracion(project) {
+    if (project.ilustracionSprite) {
+      return `<div class="planta-sprite h-full aspect-[2/3] pointer-events-none" style="background-image:url('${project.ilustracionSprite}'); --frames:${project.spriteFrames};"></div>`;
+    }
+    if (project.ilustracion) {
+      return `<img src="${project.ilustracion}" alt="${project.titulo}" class="w-full h-full object-contain pointer-events-none" />`;
+    }
+    return `<span class="text-4xl">🪴</span>`;
   }
 
   function renderDots() {
@@ -145,11 +188,8 @@ const proyectosData = proyectos.map((p) => ({
     if (slot0) {
       slot0.innerHTML = `
         <a href="/proyectos/${leftProject.id}" class="group block cursor-pointer transition-transform duration-300 hover:scale-105">
-          <div class="w-40 h-40 flex items-center justify-center opacity-85">
-            ${leftProject.ilustracion 
-              ? `<img src="${leftProject.ilustracion}" alt="${leftProject.titulo}" class="w-full h-full object-contain pointer-events-none" />` 
-              : `<span class="text-4xl">🪴</span>`
-            }
+          <div class="w-60 h-60 flex items-center justify-center">
+            ${renderIlustracion(leftProject)}
           </div>
         </a>
       `;
@@ -170,11 +210,8 @@ const proyectosData = proyectos.map((p) => ({
           </div>
 
           <!-- Imagen (transparente: deja ver la línea ASCII de fondo pasando por la base) -->
-          <div class="w-60 h-60 mx-auto flex items-center justify-center my-2">
-            ${centerProject.ilustracion 
-              ? `<img src="${centerProject.ilustracion}" alt="${centerProject.titulo}" class="w-full h-full object-contain pointer-events-none opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300" />` 
-              : `<span class="text-5xl grayscale opacity-80">🪴</span>`
-            }
+          <div class="w-60 h-60 mx-auto flex items-center justify-center  hover:scale-105">
+            ${renderIlustracion(centerProject)}
           </div>
 
       
@@ -205,11 +242,8 @@ const proyectosData = proyectos.map((p) => ({
     if (slot2) {
       slot2.innerHTML = `
         <a href="/proyectos/${rightProject.id}" class="group block cursor-pointer transition-transform duration-300 hover:scale-105">
-          <div class="w-40 h-40 flex items-center justify-center opacity-85">
-            ${rightProject.ilustracion 
-              ? `<img src="${rightProject.ilustracion}" alt="${rightProject.titulo}" class="w-full h-full object-contain pointer-events-none" />` 
-              : `<span class="text-4xl">🪴</span>`
-            }
+          <div class="w-60 h-60 flex items-center justify-center">
+            ${renderIlustracion(rightProject)}
           </div>
         </a>
       `;

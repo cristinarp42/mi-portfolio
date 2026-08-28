@@ -12,6 +12,8 @@ const proyectosCollection = defineCollection({
     subtituloBreve: z.string(),
     categoria: z.array(z.string()),
     ilustracion: z.string().optional(),
+    ilustracionSprite: z.string().optional(),   // ruta al sprite PNG
+    spriteFrames: z.number().optional().default(4), // nº de frames en el sprite
     videoIlustracion: z.string().optional(),
     animacionLottie: z.string().optional(),
     orden: z.number(),
