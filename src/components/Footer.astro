@@ -2,12 +2,13 @@
 <section class="w-full px-4 sm:px-8 pt-20 md:pt-0 pb-6 md:pb-3 flex flex-col items-center justify-center text-center">
   <!-- Frase Móvil (2 líneas) -->
   <div class="block md:hidden space-y-1 text-stone-600 text-[10px] leading-relaxed">
-    <p>Si has llegado hasta aquí,</p>
-    <p>oficialmente <strong class="font-bold text-stone-900">te llevé al huerto.</strong></p>
+   <p>Admitámoslo: <strong class="font-bold text-stone-900 not-italic">te llevé al huerto.</strong></p>
   </div>
 
   <!-- Línea divisoria en móvil entre texto y el bloque del footer -->
-  <div class="w-12 h-[1px] bg-stone-300 block md:hidden mt-4"></div>
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-stone-400 mt-0 animate-pulse">
+    <path d="M6 9l6 6 6-6"/>
+  </svg>
 </section>
 
 <!-- FOOTER ULTRAFINO -->
@@ -25,7 +26,7 @@
 </div>
 
   <!-- MÓVIL: apilado, botón arriba, redes/copyright abajo -->
-  <div class="flex flex-col items-center gap-6 md:hidden">
+  <div class="flex flex-col items-center gap-6 md:hidden pt-5">
     <button
       class="email-copy-btn group inline-flex items-baseline gap-1.5 cursor-pointer"
       data-email="hola@crodriguezperez.com"
@@ -40,13 +41,8 @@
       </svg>
     </button>
 
-    <div class="flex items-center justify-between w-full">
+    <div class="flex items-center justify-between w-full ">
       <div class="flex items-center gap-2">
-        <a href="https://github.com/tuusuario" aria-label="GitHub" class="w-8 h-8 border border-stone-700 rounded-md flex items-center justify-center text-stone-300 hover:bg-[var(--color-accent)] hover:border-[var(--color-accent)] hover:text-white transition-colors">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/>
-          </svg>
-        </a>
         <a href="https://linkedin.com/in/tuusuario" aria-label="LinkedIn" class="w-8 h-8 border border-stone-700 rounded-md flex items-center justify-center text-stone-300 hover:bg-[var(--color-accent)] hover:border-[var(--color-accent)] hover:text-white transition-colors">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6Z"/>
