@@ -4,39 +4,55 @@ import RegaderaCursor from '../components/RegadoraCursor.astro';
 
 interface Props {
   title: string;
+  description?: string;
 }
 
-const { title } = Astro.props;
+const {
+  title,
+  description = "Portfolio con raíces: cada planta esconde un proyecto. Riega y descubre.",
+} = Astro.props;
+
+const siteUrl = "https://www.crodriguezperez.com";
 ---
 
 <!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Portfolio - Cristina Rodríguez" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/logo.svg" />
-    <title>{title}</title>
-    <!-- Open Graph (WhatsApp, Slack, LinkedIn, Facebook...) -->
-  <meta property="og:title" content="Cristina Rodríguez — Marketing & Desarrollo Web" />
-  <meta property="og:description" content="Portfolio con raíces: cada planta esconde un proyecto. Riega y descubre." />
-  <meta property="og:image" content="https://www.crodriguezperez.com/logo.png" />
-  <meta property="og:url" content="https://www.crodriguezperez.com" />
-  <meta property="og:type" content="website" />
+    <link rel="canonical" href={siteUrl} />
 
-  <!-- Twitter/X Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Cristina Rodríguez — Marketing & Desarrollo Web" />
-  <meta name="twitter:description" content="Portfolio con raíces: cada planta esconde un proyecto. Riega y descubre." />
-  <meta name="twitter:image" content="https://www.crodriguezperez.com/logo.png" />
-   
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <!-- Open Graph (WhatsApp, Slack, LinkedIn, Facebook...) -->
+    <meta property="og:title" content="Cristina Rodríguez — Marketing & Desarrollo Web" />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={`${siteUrl}/logo.png`} />
+    <meta property="og:image:width" content="400" />
+    <meta property="og:image:height" content="400" />
+    <meta property="og:url" content={siteUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Cristina Rodríguez" />
+    <meta property="og:locale" content="es_ES" />
+
+    <!-- Twitter/X Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Cristina Rodríguez — Marketing & Desarrollo Web" />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${siteUrl}/og-image.png`} />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body class="min-h-screen antialiased">
-  <RegaderaCursor />
+    <RegaderaCursor />
     <slot />
   </body>
 </html>
