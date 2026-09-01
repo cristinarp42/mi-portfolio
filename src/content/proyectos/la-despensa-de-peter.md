@@ -6,7 +6,7 @@ videoIlustracion: "/images/proyectos/la-despensa-de-peter/peter-video.mp4"
 ilustracionSprite: "/images/proyectos/sprite_planta_v2.png"
 spriteFrames: 4
 orden: 1
-imagenDestacada: "/images/proyectos/la-despensa-de-peter/peter-1.png"
+imagenDestacada: "/images/proyectos/la-despensa-de-peter/peter-img-02.webp"
 fecha: "2026"
 linkProyecto: "https://ejemplo.com"
 secciones:

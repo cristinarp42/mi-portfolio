@@ -5,7 +5,7 @@ categoria: ["FRONTEND", "MOBILE"]
 ilustracionSprite: "/images/proyectos/sprite_beterrada.png"
 spriteFrames: 4
 orden: 2
-imagenDestacada: "/images/proyectos/huerto.jpg"
+imagenDestacada: "/images/proyectos/kmandero/kmandero-img-01.webp"
 fecha: "2026"
 linkProyecto: "https://ejemplo.com"
 secciones:

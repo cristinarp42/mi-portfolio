@@ -13,7 +13,8 @@ const proyectosData = proyectos.map((p) => ({
   ilustracion: p.data.ilustracion || '',
   ilustracionSprite: p.data.ilustracionSprite || '',
   spriteFrames: p.data.spriteFrames || 4,
-  animacionLottie: p.data.animacionLottie || ''
+  animacionLottie: p.data.animacionLottie || '',
+  imagenDestacada: p.data.imagenDestacada || ''
 }));
 ---
 
@@ -33,7 +34,7 @@ const proyectosData = proyectos.map((p) => ({
     </div>
 
     <!-- Slot 1: Planta Central + Tarjeta Transparente -->
-    <div class="relative flex justify-center items-center z-30 md:translate-y-5  translate-y-5">
+    <div class="relative flex justify-center items-center z-30 translate-y-5 md:translate-y-5">
       <!-- Tarjeta Central (100% Transparente) -->
       <div id="slot-1" class="w-full flex justify-center items-center origin-bottom">
         <!-- Inyectado por JS -->
@@ -48,7 +49,7 @@ const proyectosData = proyectos.map((p) => ({
   </div>
 
   <!-- Puntos Indicadores (Dots) -->
-  <div id="carrusel-dots" class="flex items-center justify-center gap-1.5 mt-10 z-20 relative">
+  <div id="carrusel-dots" class="flex items-center justify-center gap-1.5 mt-6 z-20 relative">
     <!-- Inyectado por JS -->
   </div>
 
@@ -75,7 +76,7 @@ const proyectosData = proyectos.map((p) => ({
 
 </div>
 
-<!-- Estilos para la línea ASCII y el sprite -->
+<!-- Estilos corregidos para la demo 3D y simulador de hover -->
 <style>
   :global(.ascii-ground) {
     font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
@@ -91,36 +92,71 @@ const proyectosData = proyectos.map((p) => ({
     letter-spacing: -0.05em;
   }
 
-  /* Botones prev/next: visibles solo al pasar el ratón por el carrusel entero.
-     Usamos el ID en vez de una clase .group para no chocar con el .group
-     de las tarjetas individuales (ese conflicto era el causante de que el
-     hover del sprite solo funcionara una vez). */
   :global(#carrusel-container:hover #btn-prev),
   :global(#carrusel-container:hover #btn-next) {
     opacity: 1;
   }
 
-  /* Sprite de la planta animada.
-     aspect-[2/3] en el propio elemento (ver abajo en el JS) evita que se
-     deforme sea cual sea la forma del contenedor padre. */
   :global(.planta-sprite) {
     background-repeat: no-repeat;
     background-position: 0% 0%;
     background-size: calc(var(--frames) * 100%) 100%;
   }
 
-  /* Solo el .group de cada tarjeta individual dispara esta animación */
-  :global(.group:hover .planta-sprite) {
-    animation: planta-sprite-hover 0.6s steps(3) forwards;
+  :global(.group:hover .planta-sprite),
+  :global(.planta-sprite.animate-sprite) {
+    animation: planta-sprite-play 0.6s steps(var(--steps, 3)) forwards;
   }
 
-  @keyframes planta-sprite-hover {
+  @keyframes planta-sprite-play {
     from { background-position: 0% 0%; }
     to   { background-position: 100% 0%; }
   }
+
+  /* Perspectiva para la animación demo en móvil */
+  .perspective-card {
+    perspective: 1000px;
+  }
+
+  /* Transición 3D del contenedor */
+  .demo-flip-container {
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+  }
+
+  /* Efecto 3D al activar la demo */
+  .demo-flip-container.is-demo-flipped {
+    transform: rotateY(180deg);
+  }
+
+  /* Evita que el contenido quede del revés al girar 180deg */
+  .demo-flip-container.is-demo-flipped #card-center-link {
+    transform: scaleX(-1);
+  }
+
+  /* Simulación exacta de tu hover para móvil durante la demo */
+  .group.hover-simulated {
+    background-color: rgb(28 25 23) !important; /* stone-900 */
+    border-color: rgb(44 40 37) !important; /* stone-800 */
+  }
+
+  .group.hover-simulated .z-0 {
+    opacity: 1 !important; /* Muestra la imagenDestacada */
+  }
+
+  .group.hover-simulated .w-80 {
+    opacity: 0 !important; /* Oculta la planta */
+    pointer-events: none !important;
+  }
+
+  .group.hover-simulated span,
+  .group.hover-simulated div {
+    color: #fff !important;
+    border-color: rgb(44 40 37) !important;
+  }
 </style>
 
-<!-- Script del Carrusel, Gestos y Autoplay -->
+<!-- Script con el orden de ejecución arreglado -->
 <script is:inline define:vars={{ proyectosData }}>
   let currentIndex = 0;
   const total = proyectosData.length;
@@ -139,12 +175,12 @@ const proyectosData = proyectos.map((p) => ({
     return proyectosData[normIndex];
   }
 
-  // Genera el HTML de la imagen/sprite/emoji para un proyecto dado.
-  // Centralizado aquí para no repetir (y no volver a desalinear) la lógica
-  // en los tres slots.
-  function renderIlustracion(project) {
+  function renderIlustracion(project, isCenter = false) {
+    const steps = (project.spriteFrames || 4) - 1;
+    const activeClass = isCenter ? 'animate-sprite' : '';
+
     if (project.ilustracionSprite) {
-      return `<div class="planta-sprite h-full aspect-[2/3] pointer-events-none" style="background-image:url('${project.ilustracionSprite}'); --frames:${project.spriteFrames};"></div>`;
+      return `<div class="planta-sprite h-full aspect-[2/3] pointer-events-none ${activeClass}" style="background-image:url('${project.ilustracionSprite}'); --frames:${project.spriteFrames}; --steps:${steps};"></div>`;
     }
     if (project.ilustracion) {
       return `<img src="${project.ilustracion}" alt="${project.titulo}" class="w-full h-full object-contain pointer-events-none" />`;
@@ -184,7 +220,7 @@ const proyectosData = proyectos.map((p) => ({
     const centerProject = getProject(currentIndex);
     const rightProject = getProject(currentIndex + 1);
 
-    // Slot 0 (Izquierda)
+    // Slot 0
     if (slot0) {
       slot0.innerHTML = `
         <a href="/proyectos/${leftProject.id}" class="group block cursor-pointer transition-transform duration-300 hover:scale-105">
@@ -195,50 +231,86 @@ const proyectosData = proyectos.map((p) => ({
       `;
     }
 
-    // Slot 1 (Centro) — Bloque título/info en dos columnas, alineado a la izquierda; CTA a la derecha
+    // Slot 1
     if (slot1) {
       slot1.innerHTML = `
-        <a href="/proyectos/${centerProject.id}" class="group relative block w-full max-w-xs bg-transparent border border-stone-300 rounded-xl transition-colors duration-300 hover:border-[var(--color-accent)] cursor-pointer">
+        <div class="perspective-card w-full max-w-xs">
+          <div id="demo-card-wrapper" class="demo-flip-container w-full">
+            
+            <a href="/proyectos/${centerProject.id}" id="card-center-link" class="group relative block w-full bg-transparent border border-stone-300 rounded-xl transition-all duration-500 hover:bg-stone-900 hover:border-stone-800 hover:shadow-2xl cursor-pointer overflow-hidden">
 
-          <!-- Header: categorías con marco, foco visual -->
-          <div class="border-b border-stone-200 px-4 py-3 flex flex-wrap justify-end gap-1.5">
-            ${centerProject.categoria.map(cat => `
-              <span class="text-[9px] font-bold uppercase tracking-wider text-stone-700 border border-stone-300 rounded-md px-2 py-1">
-                ${cat}
-              </span>
-            `).join('')}
+              ${centerProject.imagenDestacada ? `
+                <div 
+                  class="absolute inset-0 w-full h-full bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"
+                  style="background-image: url('${centerProject.imagenDestacada}');"
+                ></div>
+              ` : ''}
+
+              <div class="border-b border-stone-200 group-hover:border-stone-800 px-4 py-3 flex flex-wrap justify-end gap-1.5 transition-colors duration-300 group-hover:bg-stone-900/90 relative z-10">
+                ${centerProject.categoria.map(cat => `
+                  <span class="text-[9px] font-bold uppercase tracking-wider text-stone-700 group-hover:text-stone-300 border border-stone-300 group-hover:border-stone-700 bg-white/50 group-hover:bg-stone-800/80 rounded-md px-2 py-1 transition-colors duration-300">
+                    ${cat}
+                  </span>
+                `).join('')}
+              </div>
+
+              <div class="w-80 h-80 mx-auto flex items-center justify-center -mt-10 -mb-18 relative z-10 transition-all duration-300 group-hover:opacity-0 group-hover:scale-95 group-hover:pointer-events-none">
+                ${renderIlustracion(centerProject, true)}
+              </div>
+
+              <div class="px-4 py-3 flex flex-col gap-y-2 text-left relative z-10 transition-colors duration-300 group-hover:bg-stone-900/90">
+                <span class="border-t border-stone-200 group-hover:border-stone-800 pt-1 px-3 text-sm font-semibold text-stone-900 group-hover:text-white transition-colors duration-300">
+                  ${centerProject.titulo}
+                </span>
+
+                <span class="border-t border-stone-200 group-hover:border-stone-800 pt-1 px-3 text-[11px] text-stone-600 group-hover:text-stone-400 leading-relaxed line-clamp-2 transition-colors duration-300">
+                  ${centerProject.subtituloBreve}
+                </span>
+              </div>
+
+              <div class="border-t border-stone-200 group-hover:border-stone-800 pt-1 px-4 pt-3 pb-3 flex justify-center relative z-10 transition-colors duration-300 group-hover:bg-stone-900/90">
+                <button id="btn-regar" type="button" class="inline-flex items-center gap-1.5 text-[11px] font-medium text-stone-900 group-hover:text-white border border-stone-300 group-hover:border-stone-700 bg-white/80 group-hover:bg-stone-800 rounded-md px-20 py-1.5 group-hover:hover:bg-[var(--color-accent)] group-hover:hover:border-[var(--color-accent)] transition-all duration-300 cursor-pointer">
+                  regar
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22c4.418 0 8-3.358 8-7.5 0-4.142-4-9.5-8-13.5-4 4-8 9.358-8 13.5C4 18.642 7.582 22 12 22Z"/>
+                  </svg>
+                </button>
+              </div>
+
+            </a>
+
           </div>
-
-          <!-- Imagen (transparente: deja ver la línea ASCII de fondo pasando por la base) -->
-          <div class="w-80 h-80 mx-auto flex items-center justify-center  -mt-10 -mb-18  hover:scale-105">
-            ${renderIlustracion(centerProject)}
-          </div>
-
-      
-          <div class="px-4 py-3 flex flex-col gap-y-2 text-left">
-            <span class="border-t border-stone-200 pt-1 px-3 text-sm font-semibold text-stone-900 group-hover:text-[var(--color-accent)] transition-colors">
-              ${centerProject.titulo}
-            </span>
-
-            <span class="border-t border-stone-200 pt-1 px-3 text-[11px] text-stone-600 leading-relaxed line-clamp-2">
-              ${centerProject.subtituloBreve}
-            </span>
-          </div>
-
-          <!-- Botón regar, a la derecha, sin línea divisoria antes -->
-          <div class="border-t border-stone-200 pt-1 px-4 pt-3 pb-3 flex justify-center">
-            <span class="inline-flex items-center gap-1.5 text-[11px] font-medium text-stone-900 border border-stone-300 rounded-md px-20 py-1.5 group-hover:bg-[var(--color-accent)] group-hover:border-[var(--color-accent)] group-hover:text-white transition-colors">
-              regar
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 22c4.418 0 8-3.358 8-7.5 0-4.142-4-9.5-8-13.5-4 4-8 9.358-8 13.5C4 18.642 7.582 22 12 22Z"/>
-              </svg>
-            </span>
-          </div>
-        </a>
+        </div>
       `;
+
+      const btnRegar = document.getElementById('btn-regar');
+      const cardLink = document.getElementById('card-center-link');
+
+      if (btnRegar && cardLink) {
+        btnRegar.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+
+          const spriteEl = cardLink.querySelector('.planta-sprite');
+
+          if (spriteEl) {
+            spriteEl.classList.remove('animate-sprite', 'play-now');
+            void spriteEl.offsetWidth; 
+            spriteEl.classList.add('play-now');
+          }
+
+          if (typeof animarRiegoAscii === 'function') {
+            animarRiegoAscii(cardLink);
+          }
+
+          setTimeout(() => {
+            window.location.href = cardLink.getAttribute('href');
+          }, 1100);
+        });
+      }
     }
 
-    // Slot 2 (Derecha)
+    // Slot 2
     if (slot2) {
       slot2.innerHTML = `
         <a href="/proyectos/${rightProject.id}" class="group block cursor-pointer transition-transform duration-300 hover:scale-105">
@@ -285,7 +357,6 @@ const proyectosData = proyectos.map((p) => ({
       const diffX = startX - endX;
       const diffY = startY - endY;
 
-      // Solo activa el cambio si el movimiento horizontal es mayor que el vertical
       if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
         if (diffX > 0) {
           currentIndex++;
@@ -298,7 +369,6 @@ const proyectosData = proyectos.map((p) => ({
     }, { passive: true });
   }
 
-  // --- TEMPORIZADOR AUTOMÁTICO (CAMBIA CADA 5 SEGUNDOS) ---
   function startAutoplay() {
     autoplayTimer = setInterval(() => {
       currentIndex++;
@@ -310,6 +380,32 @@ const proyectosData = proyectos.map((p) => ({
     clearInterval(autoplayTimer);
     startAutoplay();
   }
+
+  function ejecutarDemoMovil() {
+  // Detecta pantalla pequeña (<768px) O emulación táctil de móvil en Inspeccionar
+  const esMovil = window.innerWidth < 768 || ('ontouchstart' in window);
+
+  if (!esMovil) return;
+
+  const wrapper = document.getElementById('demo-card-wrapper');
+  const cardLink = document.getElementById('card-center-link');
+
+  if (!wrapper || !cardLink) return;
+
+  // Ejecuta la demo
+  setTimeout(() => {
+    cardLink.classList.add('hover-simulated');
+    wrapper.classList.add('is-demo-flipped');
+
+    setTimeout(() => {
+      wrapper.classList.remove('is-demo-flipped');
+      setTimeout(() => {
+        cardLink.classList.remove('hover-simulated');
+      }, 300);
+    }, 2000);
+
+  }, 1000); // Reducido a 1s para que no tengas que esperar tanto
+}
 
   // --- GENERADOR DE SUELO ASCII ---
   function createAsciiGround({
@@ -357,9 +453,10 @@ const proyectosData = proyectos.map((p) => ({
     return () => { clearInterval(intervalId); asciiEl.remove(); };
   }
 
-  // Inicializar carrusel, animación ASCII y rotación automática
-  renderCarousel();
-  startAutoplay();
+  // --- ORDEN DE EJECUCIÓN CORREGIDO ---
+  renderCarousel();        // 1. Inyecta slot1 en el DOM primero
+  ejecutarDemoMovil();     // 2. Ejecuta la demo sobre los elementos recién creados
+  startAutoplay();         // 3. Inicia el carrusel
   createAsciiGround({
     container: '#ascii-ground-container',
     length: 110,

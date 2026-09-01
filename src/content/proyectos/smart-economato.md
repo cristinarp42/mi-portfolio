@@ -5,7 +5,7 @@ categoria: ["FRONTEND", "WEB APP", "UI/UX"]
 ilustracion: "/images/proyectos/col-frame-01.png"
 animacionLottie: "/lottie/planta2.json"
 orden: 2
-imagenDestacada: "/images/proyectos/huerto.png"
+imagenDestacada: "/images/proyectos/smart-economato/smart-economato-img-01.jpeg"
 fecha: "2026"
 linkProyecto: "https://ejemplo.com"
 secciones:
