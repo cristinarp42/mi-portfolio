@@ -2,8 +2,6 @@
 titulo: "La Despensa de Peter"
 subtituloBreve: "Rediseño de marca e integración web para digitalización de minimarket."
 categoria: ["REBRANDING", "WEB"]
-ilustracion: "/images/proyectos/beterrada-frame-03.svg"
-# Opcional: si la ilustración principal del carrusel es un vídeo:
 videoIlustracion: "/images/proyectos/la-despensa-de-peter/peter-video.mp4"
 ilustracionSprite: "/images/proyectos/sprite_planta_v2.png"
 spriteFrames: 4
