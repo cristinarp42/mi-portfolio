@@ -3,7 +3,7 @@ titulo: "La Despensa de Peter"
 subtituloBreve: "Rediseño de marca e integración web para digitalización de minimarket."
 categoria: ["REBRANDING", "WEB"]
 videoIlustracion: "/images/proyectos/la-despensa-de-peter/peter-video.mp4"
-ilustracionSprite: "/images/proyectos/sprite_planta_v2.png"
+ilustracionSprite: "/images/proyectos/sprite_beterrada.png"
 spriteFrames: 4
 orden: 1
 imagenDestacada: "/images/proyectos/la-despensa-de-peter/peter-img-02.webp"

@@ -2,7 +2,7 @@
 titulo: "Kmandero"
 subtituloBreve: "Aplicación móvil para la gestión de comandas en el sector hostelero."
 categoria: ["FRONTEND", "MOBILE"]
-ilustracionSprite: "/images/proyectos/sprite_beterrada.png"
+ilustracionSprite: "/images/proyectos/sprite_planta_v2.png"
 spriteFrames: 4
 orden: 2
 imagenDestacada: "/images/proyectos/kmandero/kmandero-img-01.webp"
