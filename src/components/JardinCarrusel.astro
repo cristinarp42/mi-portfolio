@@ -2,7 +2,8 @@
 // src/components/JardinCarrusel.astro
 import { getCollection } from 'astro:content';
 
-const proyectos = await getCollection('proyectos');
+const todosLosProyectos = await getCollection('proyectos');
+const proyectos = todosLosProyectos.filter(p => p.id !== 'portfolio');
 proyectos.sort((a, b) => a.data.orden - b.data.orden);
 
 const proyectosData = proyectos.map((p) => ({
