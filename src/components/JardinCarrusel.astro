@@ -49,7 +49,7 @@ const proyectosData = proyectos.map((p) => ({
   </div>
 
   <!-- Puntos Indicadores (Dots) -->
-  <div id="carrusel-dots" class="flex items-center justify-center gap-1.5 mt-6 z-20 relative">
+  <div id="carrusel-dots" class="flex items-center justify-center gap-1.5 mt-10 z-20 relative">
     <!-- Inyectado por JS -->
   </div>
 
@@ -230,7 +230,7 @@ const proyectosData = proyectos.map((p) => ({
     if (slot0) {
       slot0.innerHTML = `
         <a href="/proyectos/${leftProject.id}" class="group block cursor-pointer transition-transform duration-300 hover:scale-105">
-          <div class="w-80 h-80 flex items-center justify-center">
+          <div class="w-60 h-60 flex items-center justify-center">
             ${renderIlustracion(leftProject)}
           </div>
         </a>
@@ -264,7 +264,7 @@ if (slot1) {
           </div>
 
           <!-- Zona de la Imagen/Planta con TUS MÁRGENES ORIGINALES (-mt-10 -mb-18) -->
-          <div class="w-80 h-80 mx-auto flex items-center justify-center -mt-10 -mb-18 relative z-10 transition-all duration-300 group-hover:opacity-0 group-hover:scale-95 group-hover:pointer-events-none">
+          <div class="w-60 h-60 mx-auto flex items-center justify-center -mt-10 -mb-10 relative z-10 transition-all duration-300 group-hover:opacity-0 group-hover:scale-95 group-hover:pointer-events-none">
             ${renderIlustracion(centerProject, true)}
           </div>
 
@@ -333,7 +333,7 @@ if (slot1) {
     if (slot2) {
       slot2.innerHTML = `
         <a href="/proyectos/${rightProject.id}" class="group block cursor-pointer transition-transform duration-300 hover:scale-105">
-          <div class="w-80 h-80 flex items-center justify-center">
+          <div class="w-60 h-60 flex items-center justify-center">
             ${renderIlustracion(rightProject)}
           </div>
         </a>
