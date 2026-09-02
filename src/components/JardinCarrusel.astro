@@ -249,8 +249,12 @@ if (slot1) {
           <!-- Imagen del proyecto: Posicionada de fondo sobre toda la tarjeta, se revela en hover y se corta con 'bg-cover' -->
           ${centerProject.imagenDestacada ? `
             <div 
-              class="absolute inset-0 w-full h-full bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"
-              style="background-image: url('${centerProject.imagenDestacada}');"
+              class="absolute inset-0 w-full h-full bg-no-repeat opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"
+              style="
+                background-image: url('${centerProject.imagenDestacada}');
+                background-size: 130%; 
+                background-position: center -140px; /* 
+              "
             ></div>
           ` : ''}
 

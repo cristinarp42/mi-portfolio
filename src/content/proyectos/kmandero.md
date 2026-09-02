@@ -5,7 +5,7 @@ categoria: ["FRONTEND", "MOBILE"]
 ilustracionSprite: "/images/proyectos/sprite_planta_v2.png"
 spriteFrames: 4
 orden: 2
-imagenDestacada: "/images/proyectos/kmandero/kmandero-img-01.webp"
+imagenDestacada: "/images/proyectos/kmandero/kmandero-img-destacada.jpeg"
 fecha: "2026"
 linkProyecto: "https://ejemplo.com"
 secciones:
