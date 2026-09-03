@@ -13,7 +13,10 @@ secciones:
   estrategia: "Partí de una idea sencilla: <strong>las buenas ideas se cultivan</strong>. Diseñé y construí maquetas físicas para representar cada proyecto como una planta, que posteriormente fotografié, animé e integré en la web. Todo el portfolio fue diseñado y desarrollado por mí, cuidando tanto la parte visual como la técnica."
   resultado: "Un portfolio que no solo presenta mis proyectos, sino también mi manera de entender el proceso creativo: desde una idea inicial hasta su ejecución, combinando <strong>diseño, desarrollo y narrativa visual</strong>."
 galeriaImagenes:
-  - "/images/proyectos/ej.webp"
+  - "/images/proyectos/portfolio/portfolio-img-01.webp"
+  - "/images/proyectos/portfolio/portfolio-img-02.webp"
+  - "/images/proyectos/portfolio/portfolio-img-03.webp"
+  - "/images/proyectos/portfolio/portfolio-img-04.webp"
 detalles:
   - titulo: "Concepto"
     imagen: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-12 -12 48 48' fill='none' stroke='%231c1917' stroke-opacity='0.4' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M5 21c.5 -4.5 2.5 -8 7 -10'/><path d='M9 18c6.218 0 10.5 -3.288 11 -12v-2h-4.014c-9 0 -11.986 4 -12 9c0 1 0 3 2 5h3z'/></svg>"

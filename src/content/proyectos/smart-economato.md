@@ -5,7 +5,7 @@ categoria: ["FRONTEND", "WEB APP", "UI/UX"]
 ilustracion: "/images/proyectos/col-frame-01.png"
 ilustracionSprite: "/images/proyectos/sprite_col.png"
 orden: 2
-imagenDestacada: "/images/proyectos/smart-economato/smart-economato-img-03.jpeg"
+imagenDestacada: "/images/proyectos/smart-economato/smart-economato-img-03.webp"
 fecha: "2026"
 linkProyecto: "https://ejemplo.com"
 secciones:
@@ -13,8 +13,8 @@ secciones:
   estrategia: "Diseño e integración de una <strong>UI/UX responsive</strong> enfocada en la facilidad de uso diaria, con <strong>control de acceso por roles</strong> y arquitectura modular en <strong>React + TypeScript</strong>."
   resultado: "<strong>Aplicación web ágil</strong> que automatiza la gestión de inventario y optimiza la <strong>generación de reportes y pedidos</strong> en un solo clic."
 galeriaImagenes:
-  - "/images/proyectos/smart-economato/smart-economato-img-01.jpeg"
-  - "/images/proyectos/smart-economato/smart-economato-img-02.png"
+  - "/images/proyectos/smart-economato/smart-economato-img-01.webp"
+  - "/images/proyectos/smart-economato/smart-economato-img-02.webp"
 detalles:
   - titulo: "Control por Roles"
     imagen: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-12 -12 48 48' fill='none' stroke='%231c1917' stroke-opacity='0.4' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg>"
