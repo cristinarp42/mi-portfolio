@@ -23,7 +23,7 @@ const proyectosData = proyectos.map((p) => ({
   <!-- LÍNEA DE TIERRA ASCII (Detrás de los elementos) -->
   <div 
     id="ascii-ground-container" 
-    class="absolute w-[95%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0 pointer-events-none"
+    class="absolute w-[95%] top-[45%] md:top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0 pointer-events-none"
   ></div>
 
   <!-- Contenedor Principal: 1 Columna en móvil, 3 en Desktop -->
@@ -238,7 +238,7 @@ const proyectosData = proyectos.map((p) => ({
       `;
     }
 
-    // Slot 1 (Centro) — Bloque título/info en dos columnas, alineado a la izquierda; CTA a la derecha
+
 // Slot 1 (Centro)
 if (slot1) {
   slot1.innerHTML = `
@@ -269,7 +269,7 @@ if (slot1) {
           </div>
 
           <!-- Zona de la Imagen/Planta con TUS MÁRGENES ORIGINALES (-mt-10 -mb-18) -->
-          <div class="w-60 h-60 mx-auto flex items-center justify-center -mt-10 -mb-10 relative z-10 transition-all duration-300 group-hover:opacity-0 group-hover:scale-95 group-hover:pointer-events-none">
+          <div class="w-60 h-60 mx-auto flex items-center justify-center md:-mt-10 md:-mb-10 -mb-10 -mt-5 relative z-10 transition-all duration-300 group-hover:opacity-0 group-hover:scale-95 group-hover:pointer-events-none">
             ${renderIlustracion(centerProject, true)}
           </div>
 
