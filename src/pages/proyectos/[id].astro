@@ -26,21 +26,20 @@ const esVideoInicial = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(primeraMedia.trim())
 ---
 
 <Layout title={`${data.titulo} | Proyecto`}>
-  <div class="min-h-screen flex flex-col justify-between overflow-x-hidden">
+  <div class="flex min-h-screen flex-col justify-between overflow-x-hidden">
 
     <Header />
 
-    <!-- main: Se incrementó el padding inferior (pb-12) para separar todo el contenido del footer en móvil -->
-    <main class="flex-1 w-full px-4 sm:px-8 pt-5 pb-12 md:py-8 flex flex-col justify-center">
-      <div class="w-full max-w-7xl mx-auto flex flex-col gap-6 md:gap-8">
+    <main class="flex flex-1 w-full flex-col justify-center px-4 pb-12 pt-5 md:py-8 sm:px-8">
+      <div class="mx-auto flex w-full max-w-7xl flex-col gap-6 md:gap-8">
 
         <!-- CABECERA DEL PROYECTO -->
-        <div class="pt-1 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="flex flex-col justify-between gap-4 pb-3 pt-1 sm:flex-row sm:items-center">
 
-          <div class="flex items-center gap-3 flex-wrap min-w-0">
+          <div class="flex min-w-0 flex-wrap items-center gap-3">
             <a 
               href="/" 
-              class="inline-flex items-center gap-1.5 text-xs font-bold text-gray-400 hover:text-black transition-colors uppercase tracking-wider flex-none"
+              class="inline-flex flex-none items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-400 transition-colors hover:text-black"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="19" y1="12" x2="5" y2="12"></line>
@@ -49,16 +48,16 @@ const esVideoInicial = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(primeraMedia.trim())
               Volver al huerto
             </a>
 
-            <span class="text-gray-300 flex-none">/</span>
+            <span class="flex-none text-gray-300">/</span>
 
-            <h1 class="text-xl text-[var(--color-accent)] md:text-3xl lg:text-4xl font-semibold tracking-tight truncate">
+            <h1 class="truncate text-xl font-semibold tracking-tight text-[var(--color-accent)] md:text-3xl lg:text-4xl">
               {data.titulo}
             </h1>
           </div>
 
-          <div class="flex items-center gap-1.5 flex-wrap flex-none">
+          <div class="flex flex-none flex-wrap items-center gap-1.5">
             {data.categoria.map((cat) => (
-              <span class="inline-flex flex-none text-[10px] font-bold border border-gray-300 px-2.5 py-1 uppercase tracking-wider rounded-md">
+              <span class="inline-flex flex-none rounded-md border border-gray-300 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider">
                 {cat}
               </span>
             ))}
@@ -67,35 +66,34 @@ const esVideoInicial = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(primeraMedia.trim())
         </div>
 
         <!-- 2 COLUMNAS PRINCIPALES -->
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 items-end">
+        <div class="grid grid-cols-1 items-end gap-10 md:grid-cols-12 md:gap-12">
 
           <!-- COLUMNA IZQUIERDA: Galería / Imagen / Vídeo Principal -->
-          <div class="md:col-span-5 flex flex-col justify-end w-full">
-            <!-- Contenedor ajustado con marco/borde muy fino y bordes redondeados suavemente -->
-            <div id="galeria-container" class="relative w-full aspect-[4/3] bg-gray-50 rounded-xl border border-stone-200/80 shadow-sm overflow-hidden group touch-pan-y">
+          <div class="flex w-full flex-col justify-end md:col-span-5">
+            <div id="galeria-container" class="group relative aspect-[4/3] w-full touch-pan-y overflow-hidden rounded-xl border border-stone-200/80 bg-gray-50 shadow-sm">
               
               <!-- Botón Audio (Mute / Unmute) para Vídeos -->
               <button
                 id="btn-toggle-audio"
                 type="button"
                 aria-label="Activar o desactivar sonido"
-                class={`absolute top-3 right-3 z-40 w-9 h-9 border border-stone-200 bg-white/90 backdrop-blur-sm rounded-md hover:bg-black hover:border-black hover:text-white transition-all items-center justify-center text-stone-700 shadow-sm cursor-pointer ${esVideoInicial ? 'flex' : 'hidden'}`}
+                class={`absolute right-3 top-3 z-40 h-9 w-9 items-center justify-center rounded-md border border-stone-200 bg-white/90 text-stone-700 shadow-sm backdrop-blur-sm transition-all cursor-pointer hover:border-black hover:bg-black hover:text-white ${esVideoInicial ? 'flex' : 'hidden'}`}
               >
-                <!-- Icono de Sonido Desactivado (Muted) por defecto -->
+                <!-- Icono Muted -->
                 <svg id="icon-muted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M11 5L6 9H2v6h4l5 4V5z"/>
                   <line x1="23" y1="9" x2="17" y2="15"/>
                   <line x1="17" y1="9" x2="23" y2="15"/>
                 </svg>
-                <!-- Icono de Sonido Activado (Unmuted) -->
+                <!-- Icono Unmuted -->
                 <svg id="icon-unmuted" class="hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
                   <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
                 </svg>
               </button>
 
-              <!-- Wrapper flexible para alternar entre IMG y VIDEO -->
-              <div id="media-wrapper" class="w-full h-full transition-opacity duration-300">
+              <!-- Wrapper para IMG / VIDEO -->
+              <div id="media-wrapper" class="h-full w-full transition-opacity duration-300">
                 {esVideoInicial ? (
                   <video
                     id="proyecto-media-principal"
@@ -105,14 +103,14 @@ const esVideoInicial = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(primeraMedia.trim())
                     muted
                     playsinline
                     webkit-playsinline
-                    class="w-full h-full object-cover select-none"
+                    class="h-full w-full select-none object-cover"
                   ></video>
                 ) : (
                   <img
                     id="proyecto-media-principal"
                     src={primeraMedia}
                     alt={data.titulo}
-                    class="w-full h-full object-cover select-none"
+                    class="h-full w-full select-none object-cover"
                   />
                 )}
               </div>
@@ -122,7 +120,7 @@ const esVideoInicial = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(primeraMedia.trim())
                   <button
                     id="btn-prev-img"
                     aria-label="Anterior"
-                    class="hidden md:flex absolute left-3 top-1/2 -translate-y-1/2 z-40 w-10 h-10 border border-stone-300 bg-white/90 backdrop-blur-sm rounded-md hover:bg-[var(--color-accent)] hover:border-[var(--color-accent)] hover:text-white transition-colors items-center justify-center text-stone-700 opacity-0 group-hover:opacity-100 cursor-pointer shadow-sm"
+                    class="absolute left-3 top-1/2 z-40 hidden h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-md border border-stone-300 bg-white/90 text-stone-700 shadow-sm opacity-0 backdrop-blur-sm transition-colors group-hover:opacity-100 hover:border-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-white md:flex"
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M15 18l-6-6 6-6"/>
@@ -132,7 +130,7 @@ const esVideoInicial = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(primeraMedia.trim())
                   <button
                     id="btn-next-img"
                     aria-label="Siguiente"
-                    class="hidden md:flex absolute right-3 top-1/2 -translate-y-1/2 z-40 w-10 h-10 border border-stone-300 bg-white/90 backdrop-blur-sm rounded-md hover:bg-[var(--color-accent)] hover:border-[var(--color-accent)] hover:text-white transition-colors items-center justify-center text-stone-700 opacity-0 group-hover:opacity-100 cursor-pointer shadow-sm"
+                    class="absolute right-3 top-1/2 z-40 hidden h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-md border border-stone-300 bg-white/90 text-stone-700 shadow-sm opacity-0 backdrop-blur-sm transition-colors group-hover:opacity-100 hover:border-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-white md:flex"
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M9 18l6-6-6-6"/>
@@ -142,52 +140,52 @@ const esVideoInicial = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(primeraMedia.trim())
               )}
             </div>
 
-            <!-- Indicadores de Puntos -->
+            <!-- Indicadores Paginación -->
             {galeria.length > 1 && (
-              <div id="galeria-dots" class="flex items-center justify-center gap-2 mt-4">
+              <div id="galeria-dots" class="mt-4 flex items-center justify-center gap-2">
                 {galeria.map((_, i) => (
                   <button
                     type="button"
                     data-index={i}
                     aria-label={`Ver elemento ${i + 1}`}
-                    class={`dot-btn h-2 rounded-full transition-all cursor-pointer ${i === 0 ? 'bg-black w-5' : 'bg-gray-300 hover:bg-gray-400 w-2'}`}
+                    class={`dot-btn h-2 cursor-pointer rounded-full transition-all ${i === 0 ? 'w-5 bg-black' : 'w-2 bg-gray-300 hover:bg-gray-400'}`}
                   ></button>
                 ))}
               </div>
             )}
           </div>
 
-          <!-- COLUMNA DERECHA: Contenido (Tabs) + Acordeón -->
-          <div class="md:col-span-7 flex flex-col justify-between self-stretch w-full min-w-0 mb-4 md:mb-0">
+          <!-- COLUMNA DERECHA: Pestañas + Acordeón -->
+          <div class="mb-4 flex w-full min-w-0 flex-col justify-between self-stretch md:mb-0 md:col-span-7">
 
-            <!-- Pestañas (Tabs) y Descripción -->
+            <!-- Pestañas y Descripción -->
             <div class="w-full">
               {data.secciones && (
                 <div id="tabs-container" class="w-full">
-                  <nav class="flex gap-4 sm:gap-5 text-xs sm:text-sm font-bold overflow-x-auto pb-2">
+                  <nav class="flex gap-4 overflow-x-auto pb-2 text-xs font-bold sm:gap-5 sm:text-sm">
                     {data.secciones.encargo && (
-                      <button data-tab="encargo" class="tab-btn pb-2 border-b-2 border-black text-black transition-all cursor-pointer whitespace-nowrap">
+                      <button data-tab="encargo" class="tab-btn cursor-pointer whitespace-nowrap border-b-2 border-black pb-2 text-black transition-all">
                         El encargo -
                       </button>
                     )}
                     {data.secciones.estrategia && (
-                      <button data-tab="estrategia" class="tab-btn pb-2 border-b-2 border-transparent text-gray-400 hover:text-black transition-all cursor-pointer whitespace-nowrap">
+                      <button data-tab="estrategia" class="tab-btn cursor-pointer whitespace-nowrap border-b-2 border-transparent pb-2 text-gray-400 transition-all hover:text-black">
                         La estrategia +
                       </button>
                     )}
                     {data.secciones.resultado && (
-                      <button data-tab="resultado" class="tab-btn pb-2 border-b-2 border-transparent text-gray-400 hover:text-black transition-all cursor-pointer whitespace-nowrap">
+                      <button data-tab="resultado" class="tab-btn cursor-pointer whitespace-nowrap border-b-2 border-transparent pb-2 text-gray-400 transition-all hover:text-black">
                         El resultado +
                       </button>
                     )}
                   </nav>
-                  <div class="border-b border-gray-200 -mt-[1px]"></div>
+                  <div class="-mt-[1px] border-b border-gray-200"></div>
                 </div>
               )}
 
-              <!-- Contenido de las Pestañas -->
+              <!-- Contenido Pestañas -->
               {data.secciones && (
-                <div class="w-full text-gray-500 text-sm leading-relaxed mt-4 md:mt-6 mb-8 md:mb-4">
+                <div class="mb-8 mt-4 w-full text-sm leading-relaxed text-gray-500 md:mb-4 md:mt-6">
                   {data.secciones.encargo && (
                     <div id="tab-encargo" class="tab-content block">
                       <p set:html={data.secciones.encargo}></p>
@@ -209,39 +207,35 @@ const esVideoInicial = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(primeraMedia.trim())
 
             <!-- Acordeón de Detalles -->
             {data.detalles && data.detalles.length > 0 && (
-              <div class="mt-10 md:mt-8 w-full">
-                <div class="flex items-end justify-between gap-2 sm:gap-4 md:gap-6 border-b border-gray-200 pb-0 min-h-[120px] md:min-h-[140px] w-full">
+              <div class="mt-10 w-full md:mt-8">
+                <div class="flex min-h-[120px] w-full items-end justify-between gap-2 border-b border-gray-200 pb-0 sm:gap-4 md:min-h-[140px] md:gap-6">
                   {data.detalles.map((detalle, index) => {
                     const isOpen = index === 0;
                     return (
                       <div
                         data-index={index}
-                        class={`detalle-item flex flex-col justify-between transition-all duration-300 min-w-0 ${isOpen ? 'flex-1' : 'w-16 sm:w-20 md:w-24'}`}
+                        class={`detalle-item flex flex-col justify-between min-w-0 transition-all duration-300 ${isOpen ? 'flex-1' : 'w-16 sm:w-20 md:w-24'}`}
                       >
-                        <div class="flex items-start gap-2 sm:gap-3 mb-3">
+                        <div class="mb-3 flex items-start gap-2 sm:gap-3">
                           <button
                             data-index={index}
-                            class="accordion-trigger w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex-none bg-gray-100 rounded-lg overflow-hidden border border-gray-200 cursor-pointer hover:border-black transition-colors"
+                            aria-label={`Ver detalle ${detalle.titulo}`}
+                            class="accordion-trigger h-16 w-16 flex-none cursor-pointer overflow-hidden rounded-lg border border-gray-200 bg-gray-100 transition-colors hover:border-black sm:h-20 sm:w-20 md:h-24 md:w-24"
                           >
-                            <img src={detalle.imagen} alt={detalle.titulo} class="w-full h-full object-cover pointer-events-none" />
+                            <img src={detalle.imagen} alt={detalle.titulo} class="pointer-events-none h-full w-full object-cover" />
                           </button>
 
-                          <div class={`info-box text-xs md:text-sm text-gray-600 transition-opacity duration-200 min-w-0 ${isOpen ? 'block opacity-100' : 'hidden opacity-0'}`}>
-                            <button
-                              data-index={index}
-                              class="accordion-trigger font-mono text-gray-500 hover:text-black font-bold mb-1 block cursor-pointer text-xs"
-                            >
-                            </button>
-                              <p 
-                                class="leading-relaxed line-clamp-3 sm:line-clamp-4" 
-                                set:html={detalle.descripcion}
-                              />
+                          <div class={`info-box min-w-0 text-xs text-gray-600 transition-opacity duration-200 md:text-sm ${isOpen ? 'block opacity-100' : 'hidden opacity-0'}`}>
+                            <p 
+                              class="leading-relaxed line-clamp-3 sm:line-clamp-4" 
+                              set:html={detalle.descripcion}
+                            />
                           </div>
                         </div>
 
                         <button
                           data-index={index}
-                          class={`accordion-trigger group flex items-center justify-between w-full text-left font-bold text-[11px] sm:text-xs md:text-sm pb-2.5 -mb-[1px] border-b-2 transition-all cursor-pointer ${
+                          class={`accordion-trigger group flex w-full cursor-pointer items-center justify-between border-b-2 pb-2.5 -mb-[1px] text-left text-[11px] font-bold transition-all sm:text-xs md:text-sm ${
                             isOpen
                               ? 'border-black text-black'
                               : 'border-transparent text-gray-400 hover:border-black hover:text-black'
@@ -250,7 +244,7 @@ const esVideoInicial = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(primeraMedia.trim())
                           <span class="title-text truncate">
                             {detalle.titulo}
                           </span>
-                          <span class="symbol font-mono text-xs md:text-sm ml-1 flex-none">
+                          <span class="symbol ml-1 flex-none font-mono text-xs md:text-sm">
                             {isOpen ? '-' : '+'}
                           </span>
                         </button>
@@ -268,7 +262,7 @@ const esVideoInicial = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(primeraMedia.trim())
       </div>
     </main>
 
-    <Footer class="py-12 md:py-8 px-4 sm:px-8" />
+    <Footer class="px-4 py-12 sm:px-8 md:py-8" />
   </div>
 </Layout>
 
@@ -283,7 +277,7 @@ const esVideoInicial = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(primeraMedia.trim())
   const iconUnmuted = document.getElementById('icon-unmuted');
 
   let currentIndex = 0;
-  let isAudioMuted = true; // Estado global del audio
+  let isAudioMuted = true;
 
   function isVideo(url) {
     return typeof url === 'string' && /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(url.trim());
@@ -300,7 +294,7 @@ const esVideoInicial = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(primeraMedia.trim())
   }
 
   function toggleAudio() {
-    const video = mediaWrapper.querySelector('video');
+    const video = mediaWrapper?.querySelector('video');
     if (video) {
       isAudioMuted = !isAudioMuted;
       video.muted = isAudioMuted;
@@ -308,9 +302,7 @@ const esVideoInicial = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(primeraMedia.trim())
     }
   }
 
-  if (btnAudio) {
-    btnAudio.addEventListener('click', toggleAudio);
-  }
+  btnAudio?.addEventListener('click', toggleAudio);
 
   function updateMedia(newIndex) {
     if (!mediaWrapper || galeriaImagenes.length === 0) return;
@@ -322,7 +314,6 @@ const esVideoInicial = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(primeraMedia.trim())
     const newSrc = galeriaImagenes[currentIndex];
     const isVid = isVideo(newSrc);
 
-    // Mostrar u ocultar el botón de volumen si es un vídeo o una imagen
     if (btnAudio) {
       if (isVid) {
         btnAudio.classList.remove('hidden');
@@ -333,7 +324,6 @@ const esVideoInicial = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(primeraMedia.trim())
       }
     }
 
-    // Transición suave
     mediaWrapper.style.opacity = '0';
 
     setTimeout(() => {
@@ -345,9 +335,9 @@ const esVideoInicial = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(primeraMedia.trim())
         video.src = newSrc;
         video.autoplay = true;
         video.loop = true;
-        video.muted = isAudioMuted; // Respeta el estado de mute/unmute actual
+        video.muted = isAudioMuted;
         video.playsInline = true;
-        video.className = 'w-full h-full object-cover select-none';
+        video.className = 'h-full w-full select-none object-cover';
         
         mediaWrapper.appendChild(video);
         video.play().catch(() => {});
@@ -356,7 +346,7 @@ const esVideoInicial = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(primeraMedia.trim())
         img.id = 'proyecto-media-principal';
         img.src = newSrc;
         img.alt = tituloProyecto || 'Proyecto';
-        img.className = 'w-full h-full object-cover select-none';
+        img.className = 'h-full w-full select-none object-cover';
         
         mediaWrapper.appendChild(img);
       }
@@ -364,7 +354,6 @@ const esVideoInicial = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(primeraMedia.trim())
       mediaWrapper.style.opacity = '1';
     }, 150);
 
-    // Actualizar puntos de paginación
     dots.forEach((d, i) => {
       if (i === currentIndex) {
         d.classList.remove('bg-gray-300', 'hover:bg-gray-400', 'w-2');
@@ -376,12 +365,12 @@ const esVideoInicial = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(primeraMedia.trim())
     });
   }
 
-  if (btnPrev) btnPrev.addEventListener('click', () => updateMedia(currentIndex - 1));
-  if (btnNext) btnNext.addEventListener('click', () => updateMedia(currentIndex + 1));
+  btnPrev?.addEventListener('click', () => updateMedia(currentIndex - 1));
+  btnNext?.addEventListener('click', () => updateMedia(currentIndex + 1));
 
   dots.forEach((dot) => {
     dot.addEventListener('click', () => {
-      const idx = parseInt(dot.getAttribute('data-index'), 10);
+      const idx = parseInt(dot.getAttribute('data-index') || '0', 10);
       updateMedia(idx);
     });
   });
@@ -396,26 +385,19 @@ const esVideoInicial = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(primeraMedia.trim())
 
     galeriaContainer.addEventListener('touchend', (e) => {
       endX = e.changedTouches[0].clientX;
-      handleSwipe();
-    }, { passive: true });
-
-    function handleSwipe() {
       const threshold = 40;
       const diff = startX - endX;
 
       if (Math.abs(diff) > threshold) {
-        if (diff > 0) {
-          updateMedia(currentIndex + 1);
-        } else {
-          updateMedia(currentIndex - 1);
-        }
+        if (diff > 0) updateMedia(currentIndex + 1);
+        else updateMedia(currentIndex - 1);
       }
-    }
+    }, { passive: true });
   }
 </script>
 
 <script>
-  // Script para las Pestañas y Acordeón
+  // Script para Pestañas y Acordeón
   const buttons = document.querySelectorAll('.tab-btn');
   const contents = document.querySelectorAll('.tab-content');
 

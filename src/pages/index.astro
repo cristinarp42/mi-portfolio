@@ -9,34 +9,28 @@ const proyecto = await getEntry('proyectos', 'portfolio');
 ---
 
 <Layout title="Portfolio | Cristina Rodríguez">
-  <div class="min-h-screen flex flex-col justify-between">
+  <div class="flex min-h-screen flex-col justify-between">
 
     <Header />
 
     <main
       id="hero-garden"
-      class="flex-1 w-full max-w-5xl mx-auto px-6 sm:px-8 py-8 md:py-5 flex flex-col items-center justify-start md:gap-8 sm:cursor-none"
+      class="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-start px-6 py-8 sm:cursor-none md:gap-8 md:py-5 sm:px-8"
     >
-      <!-- Header: Izquierda en móvil (items-start), centrado en desktop (md:items-center) -->
-      <header class="flex flex-col items-start md:items-center justify-center gap-2 my-5 md:my-0 select-none w-full md:text-center text-left">
-        
-        <!-- Bloque contenedor alineado a la izquierda -->
-        <div class="inline-flex flex-col items-center justify-center md:justify-center text-left md:text-center w-full sm:w-auto">
+      <!-- Cabecera del Hero -->
+      <header class="my-5 flex w-full select-none flex-col items-start justify-center gap-2 text-left md:my-0 md:items-center md:text-center">
+        <div class="inline-flex w-full flex-col items-center justify-center text-left sm:w-auto md:text-center">
           
-          <!-- Título principal -->
-          <h1 class="text-lg sm:text-xl font-bold tracking-tight text-stone-900 leading-tight flex flex-col items-center md:item-center justify-center md:justify-center">
-            <!-- Línea 1 -->
+          <h1 class="flex flex-col items-center justify-center text-lg font-bold leading-tight tracking-tight text-stone-900 sm:text-xl">
             <span class="whitespace-nowrap">Pasa, aquí estoy </span>
             <span class="whitespace-nowrap">cultivando proyectos de </span>
             
-            <!-- Línea 2: Texto fijo + animación con caja estática -->
-            <span class="inline-flex items-center justify-center gap-x-2 flex-wrap text-left">
-              
-              <!-- Caja rígida para bloquear el movimiento al cambiar palabras -->
-              <span class="inline-flex h-[1.25em] w-[14rem] sm:w-[18rem] overflow-hidden text-[var(--color-accent)] font-extrabold align-bottom justify-center flex-none">
+            <span class="inline-flex flex-wrap items-center justify-center gap-x-2 text-left">
+              <!-- Contenedor con ancho fijo para bloquear desplazamiento -->
+              <span class="inline-flex h-[1.25em] w-[14rem] flex-none items-end justify-center overflow-hidden font-extrabold text-[var(--color-accent)] sm:w-[18rem]">
                 <span 
                   id="slot-word" 
-                  class="inline-block transition-transform duration-500 ease-[cubic-bezier(0.83,0,0.17,1)] text-left whitespace-nowrap"
+                  class="inline-block whitespace-nowrap text-left transition-transform duration-500 ease-[cubic-bezier(0.83,0,0.17,1)]"
                 >
                   branding.
                 </span>
@@ -45,70 +39,62 @@ const proyecto = await getEntry('proyectos', 'portfolio');
           </h1>
 
         </div>
-
       </header>
 
-      <!-- Carrusel -->
-<div class="w-full flex-1 md:flex-none flex flex-col items-center justify-center my-6 md:my-0">
+      <!-- Carrusel y Enlace opcional -->
+      <div class="my-6 flex w-full flex-1 flex-col items-center justify-center md:my-0 md:flex-none">
+        <JardinCarrusel />
 
- 
-
-
-  <JardinCarrusel />
-
-  
-{proyecto && (
-  <a 
-    href={`/proyectos/${proyecto.id}`} 
-    class="inline-flex items-center gap-3 mt-6 text-[12px] italic text-stone-500 select-none hover:text-stone-900 transition-colors group cursor-pointer"
-  >
-    <svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      width="14" 
-      height="14" 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      stroke-width="2" 
-      stroke-linecap="round" 
-      stroke-linejoin="round"
-      class="transition-transform group-hover:scale-110"
-    >
-      <path d="M8 13v-7.5a1.5 1.5 0 0 1 3 0v6.5" />
-      <path d="M11 5.5v-2a1.5 1.5 0 1 1 3 0v8.5" />
-      <path d="M14 5.5a1.5 1.5 0 0 1 3 0v6.5" />
-      <path d="M17 7.5a1.5 1.5 0 0 1 3 0v8.5a6 6 0 0 1 -6 6h-2h.208a6 6 0 0 1 -5.012 -2.7a69.74 69.74 0 0 1 -.196 -.3c-.312 -.479 -1.407 -2.388 -3.286 -5.728a1.5 1.5 0 0 1 .536 -2.022a1.867 1.867 0 0 1 2.28 .28l1.47 1.47" />
-    </svg>
-    <span class="group-hover:underline">No stock. Hecho y animado a mano.</span>
-  </a>
-)}
-  
-</div>
+        {proyecto && (
+          <a 
+            href={`/proyectos/${proyecto.id}`} 
+            class="group cursor-pointer mt-6 inline-flex items-center gap-3 select-none text-[12px] italic text-stone-500 transition-colors hover:text-stone-900"
+          >
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              width="14" 
+              height="14" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              stroke-width="2" 
+              stroke-linecap="round" 
+              stroke-linejoin="round"
+              class="transition-transform group-hover:scale-110"
+            >
+              <path d="M8 13v-7.5a1.5 1.5 0 0 1 3 0v6.5" />
+              <path d="M11 5.5v-2a1.5 1.5 0 1 1 3 0v8.5" />
+              <path d="M14 5.5a1.5 1.5 0 0 1 3 0v6.5" />
+              <path d="M17 7.5a1.5 1.5 0 0 1 3 0v8.5a6 6 0 0 1 -6 6h-2h.208a6 6 0 0 1 -5.012 -2.7a69.74 69.74 0 0 1 -.196 -.3c-.312 -.479 -1.407 -2.388 -3.286 -5.728a1.5 1.5 0 0 1 .536 -2.022a1.867 1.867 0 0 1 2.28 .28l1.47 1.47" />
+            </svg>
+            <span class="group-hover:underline">No stock. Hecho y animado a mano.</span>
+          </a>
+        )}
+      </div>
     </main>
 
     <Footer />
-
   </div>
 </Layout>
 
 <script>
-  const words = ['branding.', 'desarrollo frontend.', 'diseño gráfico.', 'vídeo.', 'animacion.'];
+  const words = ['branding.', 'desarrollo frontend.', 'diseño gráfico.', 'vídeo.', 'animación.'];
   let currentIndex = 0;
   const wordEl = document.getElementById('slot-word');
 
   if (wordEl) {
     setInterval(() => {
-      // 1. Barrido hacia arriba
+      // 1. Salida hacia arriba
       wordEl.style.transform = 'translateY(-120%)';
 
       setTimeout(() => {
-        // 2. Teletransporte invisible abajo
+        // 2. Reposicionamiento instantáneo abajo
         wordEl.style.transition = 'none';
         currentIndex = (currentIndex + 1) % words.length;
         wordEl.textContent = words[currentIndex];
         wordEl.style.transform = 'translateY(120%)';
 
-        // 3. Entrada fluida al centro
+        // 3. Entrada suave desde abajo
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             wordEl.style.transition = 'transform 500ms cubic-bezier(0.83, 0, 0.17, 1)';
